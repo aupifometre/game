@@ -1,8 +1,8 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Guichet 09 — La chaîne des milliards · La République des Faits</title>
-<link rel="icon" href="favicon.svg?v=1">
-<link rel="stylesheet" href="styles.css?v=1787875876">
+<title>Cadran 09 — La chaîne des milliards · Au pifomètre</title>
+<link rel="icon" href="favicon.svg?v=1787878178">
+<link rel="stylesheet" href="styles.css?v=1787878178">
 <style>
 .mes{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin-top:8px}
 .m{border:2px solid var(--ink);border-radius:8px;background:#fff;padding:11px;cursor:pointer;transition:transform .08s}
@@ -55,11 +55,11 @@ input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
 .tab.on{background:var(--ink);color:var(--paper)}
 </style></head><body><div class="wrap">
 
-<div class="bureau"><b><a href="index.html">RF ★ LA RÉPUBLIQUE DES FAITS</a></b>
-<div class="form-no">GUICHET N°09 — CONVERSION DES MILLIARDS<br>Formulaire CHAINE-2027</div></div>
+<div class="bureau"><b><a href="index.html">AU PIFOMÈTRE</a></b>
+<div class="form-no">CADRAN N°09 — LA CONVERSION<br>aiguille calibrée sur 5 mesures</div></div>
 
 <h1>Un milliard,<br>ça fait combien<br><span class="o">sur une fiche de paie ?</span></h1>
-<div class="sub">On annonce des mesures en milliards. Personne ne vit en milliards. Cette machine déroule la chaîne complète — et elle s'applique aux mesures de tous les bords, sans exception.</div>
+<div class="sub">On annonce des mesures en milliards. Personne ne vit en milliards. Ici, on déroule la chaîne jusqu'au bout — et elle s'applique aux mesures de tous les bords, sans exception.</div>
 
 <div class="card"><span class="step-tag">ÉTAPE 01 — LA MESURE</span>
 <div class="tabs"><span class="tab on" data-f="all">toutes</span><span class="tab" data-f="rec">↑ recettes</span><span class="tab" data-f="dep">↓ dépenses</span></div>
@@ -111,7 +111,7 @@ Charges employeur État : CAS Pensions. Effectifs : DEPP (enseignants), DREES (h
 Les rendements annoncés sont ceux de leurs promoteurs — c'est le point de départ, pas une validation.
 </footer>
 
-<script src="rf-data.js?v=1787875876"></script>
+<script src="rf-data.js?v=1787878225"></script>
 <script>
 const $=id=>document.getElementById(id);
 const eur=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:0});
@@ -234,7 +234,7 @@ $('unlock').onchange=e=>{
 $('share').onclick=async()=>{
  const m=window._m;
  const res=await RF.shareCard((ctx,W,H)=>{
-  RF.cardBase(ctx,W,H,'GUICHET N°09 — CHAÎNE DES MILLIARDS');
+  RF.cardBase(ctx,W,H,'CADRAN N°09 — LA CHAÎNE');
   ctx.fillStyle='#1B160F';ctx.font='900 46px system-ui';
   ctx.fillText(cur.n.toUpperCase(),70,250);
   ctx.font='34px system-ui';ctx.fillText(`${md(cur.md)} milliards annoncés`,70,305);

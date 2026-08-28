@@ -1,4 +1,4 @@
-/* La République des Faits — chargeur de données.
+/* Au pifomètre — chargeur de données.
    Ordre : cache localStorage (30 j) → API publiques en live → snapshot embarqué. */
 window.RF = (function () {
   const CACHE_KEY = 'rf-data-v2';
@@ -124,29 +124,29 @@ window.RF = (function () {
   }
 
   /* ---------- barre de navigation partagée ---------- */
-  const GUICHETS = [
-    { f:'index.html',      n:'',   t:'Accueil',                 em:'★'  },
-    { f:'pari.html',       n:'04', t:'Le pari statistique',     em:'🎲' },
+  const CADRANS = [
+    { f:'index.html',      n:'',   t:'Accueil',                 em:'◔'  },
+    { f:'pari.html',       n:'04', t:'Le pari',     em:'🎲' },
     { f:'classement.html', n:'07', t:'Le classement',           em:'🏆' },
     { f:'courbe.html',     n:'02', t:'Dessine la courbe',       em:'✏️' },
     { f:'milliards.html',  n:'09', t:'La chaîne des milliards', em:'🧾' },
   ];
   function mountNav(current) {
-    const here = GUICHETS.find(g => g.f === current) || GUICHETS[0];
+    const here = CADRANS.find(g => g.f === current) || CADRANS[0];
     const isHome = here.f === 'index.html';
     const bar = document.createElement('div');
     bar.className = 'topnav';
     bar.innerHTML =
-      (isHome ? '<span class="tn-back tn-home">★</span>'
+      (isHome ? '<span class="tn-back tn-home">◔</span>'
               : '<a class="tn-back" href="index.html" aria-label="Retour à l\'accueil">←</a>') +
-      `<span class="tn-title">${isHome ? 'La République des Faits' : (here.em + ' ' + here.t)}</span>` +
+      `<span class="tn-title">${isHome ? 'Au pifomètre' : (here.em + ' ' + here.t)}</span>` +
       '<button class="tn-burger" aria-label="Menu" aria-expanded="false">☰</button>';
     const drawer = document.createElement('nav');
     drawer.className = 'drawer';
-    drawer.innerHTML = '<div class="dr-head">Les guichets</div>' +
-      GUICHETS.map(g => `<a class="dr-item${g.f === current ? ' on' : ''}" href="${g.f}">
+    drawer.innerHTML = '<div class="dr-head">Les cadrans</div>' +
+      CADRANS.map(g => `<a class="dr-item${g.f === current ? ' on' : ''}" href="${g.f}">
         <span class="dr-em">${g.em}</span>
-        <span class="dr-t">${g.t}${g.n ? `<small>guichet n°${g.n}</small>` : ''}</span></a>`).join('');
+        <span class="dr-t">${g.t}${g.n ? `<small>cadran n°${g.n}</small>` : ''}</span></a>`).join('');
     const scrim = document.createElement('div');
     scrim.className = 'scrim';
     document.body.insertBefore(bar, document.body.firstChild);
@@ -214,15 +214,15 @@ window.RF = (function () {
     return 'downloaded';
   }
 
-  function cardBase(ctx, W, H, guichet) {
+  function cardBase(ctx, W, H, cadran) {
     ctx.fillStyle = '#F4EFE3'; ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = '#00000010';
     for (let x = 20; x < W; x += 34) for (let y = 20; y < H; y += 34) ctx.fillRect(x, y, 3, 3);
     ctx.fillStyle = '#1B160F'; ctx.fillRect(40, 40, W - 80, 110);
     ctx.fillStyle = '#F4EFE3'; ctx.font = '900 40px system-ui';
-    ctx.fillText('RF ★ LA RÉPUBLIQUE DES FAITS', 70, 105);
+    ctx.fillText('AU PIFOMÈTRE', 70, 105);
     ctx.font = '22px ui-monospace, monospace'; ctx.fillStyle = '#F4EFE3AA';
-    ctx.fillText(guichet, 70, 138);
+    ctx.fillText(cadran, 70, 138);
     ctx.fillStyle = '#1B160F'; ctx.font = '20px ui-monospace, monospace';
     ctx.fillText('données publiques · Banque mondiale · ONU · OMS · V-Dem · WID', 70, H - 60);
   }

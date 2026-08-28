@@ -1,12 +1,12 @@
-# aupifometre — La République des Faits
+# aupifometre — Au pifomètre
 
-Site statique de jeux de conviction sur données publiques. Aucun éditorial, aucun camp :
-les guichets font produire la conclusion par le visiteur, à partir de chiffres qu'il ne
-choisit pas et qu'il peut vérifier à la source.
+Un pifomètre, c'est l'instrument avec lequel on répond quand on ne sait pas. Ce site le mesure :
+le visiteur répond au pif, la donnée publique tombe, et c'est lui qui conclut. Aucun éditorial,
+aucun camp — les chiffres ne sont pas choisis par lui et sont vérifiables à la source.
 
 **En ligne :** https://aupifometre.github.io/game/
 
-## Les guichets
+## Les cadrans
 
 | | Page | Ce qu'on y fait |
 |---|---|---|
@@ -38,3 +38,8 @@ un paramètre `?v=` mis à jour à chaque déploiement pour contourner le cache 
 - `pari.html?y=hale&x=tax&bet=peu` — rejoue un pronostic précis
 - `classement.html?w=3333332` — rejoue une pondération (7 chiffres, somme = 20)
 - `#menu` ouvre le tiroir de navigation · `#open` déplie les panneaux du classement
+
+## Identité
+
+`logo.svg` (fond sombre) et `logo-clair.svg` : un cadran à trois zones et une aiguille dans la
+zone basse — le geste du visiteur avant la révélation. `favicon.svg` en est la version sans trame.
