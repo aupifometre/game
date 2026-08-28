@@ -1,10 +1,10 @@
-# datarepublic — La République des Faits
+# aupifometre — La République des Faits
 
 Site statique de jeux de conviction sur données publiques. Aucun éditorial, aucun camp :
 les guichets font produire la conclusion par le visiteur, à partir de chiffres qu'il ne
 choisit pas et qu'il peut vérifier à la source.
 
-**En ligne :** https://burtman.github.io/datarepublic/
+**En ligne :** https://aupifometre.github.io/game/
 
 ## Les guichets
 
