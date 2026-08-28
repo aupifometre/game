@@ -1,8 +1,8 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>La chaîne des milliards · Au pifomètre</title>
-<link rel="icon" href="favicon.svg?v=1787878867">
-<link rel="stylesheet" href="styles.css?v=1787878867">
+<link rel="icon" href="favicon.svg?v=1787880161">
+<link rel="stylesheet" href="styles.css?v=1787880161">
 <style>
 .mes{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin-top:8px}
 .m{border:2px solid var(--ink);border-radius:8px;background:#fff;padding:11px;cursor:pointer;transition:transform .08s}
@@ -52,9 +52,10 @@ input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
 .cmp{font-size:14.5px;line-height:1.55;background:#fff;border:2px solid var(--ink);border-radius:8px;padding:12px 14px}
 .cmp b{color:var(--orange)}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-.tab{font-family:var(--mono);font-size:11px;padding:6px 11px;border:2px solid var(--ink);
- background:#fff;border-radius:6px;cursor:pointer}
+.tab{font-family:var(--mono);font-size:11px;padding:7px 11px;border:2px solid var(--ink);
+ background:#fff;border-radius:6px;cursor:pointer;color:inherit;text-align:left;line-height:1.25}
 .tab.on{background:var(--ink);color:var(--paper)}
+.catdesc{font-family:var(--mono);font-size:11px;opacity:.7;margin:9px 0 2px;line-height:1.5}
 </style></head><body><div class="wrap">
 
 <div class="bureau"><b><a href="index.html">AU PIFOMÈTRE</a></b>
@@ -64,7 +65,8 @@ input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
 <div class="sub">On annonce des mesures en milliards. Personne ne vit en milliards. Ici, on déroule la chaîne jusqu'au bout — et elle s'applique aux mesures de tous les bords, sans exception.</div>
 
 <div class="card"><span class="step-tag">ÉTAPE 01 — LA MESURE</span>
-<div class="tabs"><span class="tab on" data-f="all">toutes</span><span class="tab" data-f="rec">↑ recettes</span><span class="tab" data-f="dep">↓ dépenses</span></div>
+<div class="tabs" id="tabs"></div>
+<div class="catdesc" id="catdesc"></div>
 <div class="mes" id="mes"></div></div>
 
 <div class="card"><span class="step-tag">ÉTAPE 02 — LES HYPOTHÈSES</span>
@@ -110,34 +112,62 @@ un profil</b>. Chacun porte sa propre part de budget et sa propre cascade de pr�
 <footer>Répartition du budget : FIPECO / INSEE (2024, 1 000 € de dépense publique = 571 € protection sociale,
 89 € enseignement). Réponses comportementales : Conseil d'analyse économique, cité par Public Sénat.
 Charges employeur État : CAS Pensions. Effectifs : DEPP (enseignants), DREES (hospitaliers).
-Les rendements annoncés sont ceux de leurs promoteurs — c'est le point de départ, pas une validation.
+Les seize mesures viennent du débat public de tous les bords ; leur rendement annoncé est celui de leurs
+promoteurs — c'est le point de départ du calcul, pas une validation. Les mesures sont rangées par
+<b>mécanisme</b> (prélever, récupérer, alléger, resserrer), jamais par étiquette politique. Plusieurs chiffres
+sont des estimations, signalées par ⚠ dans leur description.
 </footer>
 
-<script src="rf-data.js?v=1787878867"></script>
+<script src="rf-data.js?v=1787880161"></script>
 <script>
 const $=id=>document.getElementById(id);
 const eur=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:0});
 const md=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:n<1?2:1});
+const CATS=[
+ {id:'haut', n:'Prélever davantage en haut', d:'nouveaux impôts sur les patrimoines et les grandes marges'},
+ {id:'recup',n:'Récupérer ce qui échappe',   d:'fraude et avantages fiscaux existants'},
+ {id:'train',n:"Alléger le train de vie de l'État", d:'coût de fonctionnement des institutions et de l\'administration'},
+ {id:'perim',n:'Resserrer des dépenses',     d:'périmètre ou montant de prestations et de budgets existants'},
+];
 const MES=[
- {id:'zucman',t:'rec',n:'Taxe Zucman',md:20,d:'2 % sur les patrimoines > 100 M€',
+ // — prélever davantage en haut —
+ {id:'zucman',c:'haut',t:'rec',n:'Taxe Zucman',md:20,d:'2 % sur les patrimoines > 100 M€',
   s:"Rendement annoncé par ses promoteurs : 20 Md€. Les estimations basses tournent autour de 5 Md€.",el:54},
- {id:'superprofits',t:'rec',n:'Taxer les superprofits',md:12,d:'contribution exceptionnelle sur les grandes marges',
+ {id:'superprofits',c:'haut',t:'rec',n:'Taxer les superprofits',md:12,d:'contribution sur les grandes marges',
   s:"Les chiffrages publics vont de 10 à 20 Md€ selon le périmètre retenu et l'année de référence. On part du milieu.",el:45},
- {id:'isf',t:'rec',n:"Rétablir l'ISF",md:4,d:'retour à l\'impôt de solidarité sur la fortune',
+ {id:'isf',c:'haut',t:'rec',n:"Rétablir l'ISF",md:4,d:"retour à l'impôt de solidarité sur la fortune",
   s:"L'ISF a rapporté environ 4 Md€ lors de sa dernière année pleine (2017), avant son remplacement par l'IFI.",el:50},
- {id:'fraude',t:'rec',n:'Récupérer la fraude fiscale',md:100,d:'estimation haute du manque à gagner',
+
+ // — récupérer ce qui échappe —
+ {id:'fraude',c:'recup',t:'rec',n:'Récupérer la fraude fiscale',md:100,d:'estimation haute du manque à gagner',
   s:"100 Md€ = écart théorique estimé (Solidaires Finances Publiques). Le recouvrement réel constaté est de 11 à 16 Md€/an — mets le curseur d'évaporation à ~85 % pour retrouver ce chiffre.",el:85},
- {id:'niches',t:'rec',n:'Supprimer les niches fiscales',md:10,d:'coup de rabot sur les dépenses fiscales',
+ {id:'fraudesoc',c:'recup',t:'rec',n:'Récupérer la fraude sociale',md:13,d:'fraude aux prestations et aux cotisations',
+  s:"⚠ 13 Md€ est une estimation haute du montant fraudé, pas un montant recouvrable : les sommes effectivement récupérées se comptent en centaines de millions à ~2 Md€. Même logique que pour la fraude fiscale.",el:85},
+ {id:'niches',c:'recup',t:'rec',n:'Supprimer des niches fiscales',md:10,d:'rabot sur les dépenses fiscales',
   s:"Ordre de grandeur d'un rabot ambitieux sur les 88 Md€ de dépenses fiscales recensées par le Sénat.",el:30},
- {id:'elus',t:'dep',n:'Baisser de 50 % les indemnités des élus',md:0.65,d:'députés, sénateurs et élus locaux',
-  s:"⚠ Estimation : l'ensemble des indemnités d'élus en France représente de l'ordre de 1,3 Md€ par an — la grande majorité des ~500 000 élus locaux sont bénévoles ou très faiblement indemnisés. En diviser la moitié donne ~0,65 Md€. Aucune réponse comportementale : curseur d'évaporation à 0 %.",el:0},
- {id:'ame',t:'dep',n:"Supprimer l'aide médicale d'État",md:1.2,d:'soins des étrangers en situation irrégulière',
-  s:"Budget de l'AME : environ 1,2 Md€ par an. Cette machine ne calcule que le trajet de l'argent — les effets sanitaires et les reports vers l'hôpital d'urgence n'y sont pas.",el:0},
- {id:'defense',t:'dep',n:'Couper 10 % du budget Défense',md:5,d:"redéploiement d'une dépense existante",
-  s:"Une baisse de dépense n'a pas de réponse comportementale des contribuables : curseur d'évaporation à 0 %.",el:0},
- {id:'postes',t:'dep',n:'Supprimer 200 000 postes de fonctionnaires',md:10,d:'sur les 5,7 millions d\'agents publics',
+
+ // — alléger le train de vie de l'État —
+ {id:'elus',c:'train',t:'dep',n:'Baisser de 50 % les indemnités des élus',md:0.65,d:'députés, sénateurs et élus locaux',
+  s:"⚠ Estimation : l'ensemble des indemnités d'élus en France représente de l'ordre de 1,3 Md€ par an — la grande majorité des ~500 000 élus locaux sont bénévoles ou très faiblement indemnisés. En diviser la moitié donne ~0,65 Md€.",el:0},
+ {id:'agences',c:'train',t:'dep',n:"Supprimer 10 % des agences de l'État",md:8,d:'opérateurs et agences publiques',
+  s:"Les opérateurs et agences de l'État mobilisent de l'ordre de 80 Md€ de crédits. En supprimer un dixième donne ~8 Md€ — sans compter le transfert éventuel de leurs missions à d'autres administrations.",el:20},
+ {id:'audiovisuel',c:'train',t:'dep',n:"Privatiser l'audiovisuel public",md:4,d:'France TV, Radio France, Arte, INA',
+  s:"Budget consolidé de l'audiovisuel public : environ 4 Md€ par an. Le chiffre est le coût annuel supprimé, pas le produit d'une vente.",el:0},
+ {id:'postes',c:'train',t:'dep',n:'Supprimer 200 000 postes de fonctionnaires',md:10,d:"sur 5,7 millions d'agents publics",
   s:"À un coût employeur moyen d'environ 50 000 € par agent, 200 000 postes représentent ~10 Md€. Le chiffre suppose des départs non remplacés étalés dans le temps.",el:15},
- {id:'cotis',t:'dep',n:'Supprimer 10 % des allègements de cotisations',md:7.5,d:"sur les 75 Md€ d'allègements bas salaires",
+ {id:'carence',c:'train',t:'dep',n:'Trois jours de carence dans la fonction publique',md:0.9,d:'alignement partiel sur le privé',
+  s:"⚠ Estimation : les chiffrages publics situent le premier jour de carence autour de 0,3 Md€ ; trois jours donneraient de l'ordre de 0,9 Md€, sans tenir compte des reports d'arrêts plus longs.",el:25},
+
+ // — resserrer des dépenses —
+ {id:'retraitesdes',c:'perim',t:'dep',n:'Désindexer les retraites pendant un an',md:3.5,d:'gel des pensions sur l\'inflation',
+  s:"Chiffrage couramment avancé pour une année de gel : ~3,5 Md€ d'économies. C'est une économie qui se prend directement sur le pouvoir d'achat des retraités.",el:0},
+ {id:'apl',c:'perim',t:'dep',n:'Baisser de 10 % les aides au logement',md:1.7,d:'sur ~17 Md€ d\'APL versées',
+  s:"Les aides personnelles au logement représentent environ 17 Md€. Les effets sur les loyers et les impayés ne sont pas dans cette machine.",el:0},
+ {id:'ame',c:'perim',t:'dep',n:"Supprimer l'aide médicale d'État",md:1.2,d:'soins des étrangers en situation irrégulière',
+  s:"Budget de l'AME : environ 1,2 Md€ par an. Cette machine ne calcule que le trajet de l'argent — les reports vers l'hôpital d'urgence n'y sont pas.",el:0},
+ {id:'defense',c:'perim',t:'dep',n:'Couper 10 % du budget Défense',md:5,d:"redéploiement d'une dépense existante",
+  s:"Une baisse de dépense n'a pas de réponse comportementale des contribuables : curseur d'évaporation à 0 %.",el:0},
+ {id:'cotis',c:'perim',t:'dep',n:'Supprimer 10 % des allègements de cotisations',md:7.5,d:"sur 75 Md€ d'allègements bas salaires",
   s:"Attention : ces allègements portent sur les bas salaires. L'effet emploi n'est pas dans cette machine — elle ne calcule que le trajet de l'argent.",el:20},
 ];
 let cur=MES[0];
@@ -170,17 +200,23 @@ function renderCats(){
 function syncCats(){
  if(!$('unlock').checked) $('s2').value=Math.max(1,Math.round(profil.bud*profil.sal));
 }
+let filtre='all';
+function renderTabs(){
+ $('tabs').innerHTML=`<button class="tab${filtre==='all'?' on':''}" data-f="all">toutes</button>`+
+  CATS.map(c=>`<button class="tab${filtre===c.id?' on':''}" data-f="${c.id}">${c.n}</button>`).join('');
+ $('tabs').querySelectorAll('.tab').forEach(t=>t.onclick=()=>{filtre=t.dataset.f;renderTabs();renderMes(filtre)});
+ const c=CATS.find(x=>x.id===filtre);
+ $('catdesc').textContent = c ? c.d : 'seize mesures entendues dans le débat public, chiffrées de la même façon';
+}
 function renderMes(f){
  $('mes').innerHTML='';
- MES.filter(m=>f==='all'||m.t===f).forEach(m=>{
+ MES.filter(m=>f==='all'||m.c===f).forEach(m=>{
   const d=document.createElement('div');d.className='m'+(m.id===cur.id?' sel':'');
   d.innerHTML=`<b>${m.n}</b><span class="md">${m.t==='rec'?'↑':'↓'} ${md(m.md)} Md€ annoncés</span><small>${m.d}</small>`;
   d.onclick=()=>{cur=m;$('s1').value=m.el;renderMes(f);calc()};
   $('mes').appendChild(d);});
 }
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
- document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
- renderMes(t.dataset.f);});
+
 
 function calc(){
  const ev=+$('s1').value, part=+$('s2').value, pat=+$('s3').value, cot=+$('s4').value;
@@ -273,6 +309,6 @@ $('share').onclick=async()=>{
  },'chaine-rf.png',`« ${cur.n} » : ${md(cur.md)} Md€ annoncés → ${m.mois.toLocaleString('fr-FR',{maximumFractionDigits:m.mois<10?2:0})} € net/mois pour ${m.profil}. Refais le calcul avec tes hypothèses : ${location.origin+location.pathname}`);
  $('share').textContent=res==='shared'?'📮 Partagé !':'📮 Image téléchargée (PNG)';
 };
-renderMes('all');renderCats();syncCats();calc();
+renderTabs();renderMes('all');renderCats();syncCats();calc();
 </script><script>RF.mountNav("milliards.html")</script>
 </body></html>
