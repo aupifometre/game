@@ -1,0 +1,303 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guichet 07 — Le Classement Contradictoire · La République des Faits</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+<link rel="stylesheet" href="styles.css?v=1787875876">
+<style>
+.budget{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.budget b{font-size:24px;font-weight:900}
+.budget .left{font-family:var(--mono);font-size:12px}
+.presets{display:flex;gap:8px;flex-wrap:wrap}
+.presets button{font-family:var(--mono);font-size:11px;padding:6px 10px;border:2px solid var(--ink);background:#fff;border-radius:6px;cursor:pointer}
+.presets button:hover{background:var(--ink);color:#fff}
+.crit{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1.5px dashed #1b160f44}
+.info{width:22px;height:22px;flex:0 0 22px;border-radius:50%;display:flex;align-items:center;
+ justify-content:center;font-size:13px;text-decoration:none;color:var(--ink);opacity:.32;
+ transition:opacity .12s,background .12s}
+.info:hover{opacity:1;background:#1b160f14}
+.crit .em{font-size:22px;width:30px;text-align:center}
+.crit .lbl{flex:1;min-width:0}
+.crit .lbl b{font-size:14.5px;display:block}
+.crit .lbl small{font-family:var(--mono);font-size:9.5px;opacity:.65}
+.jets{display:flex;gap:3px;min-width:110px}
+.jet{width:9px;height:16px;border:1.5px solid var(--ink);border-radius:3px;background:#fff}
+.jet.on{background:var(--orange)}
+.pm{display:flex;gap:5px}
+.pm button{width:30px;height:30px;font-size:17px;font-weight:900;border:2px solid var(--ink);background:#fff;border-radius:7px;cursor:pointer}
+.pm button:active{background:var(--ink);color:#fff}
+#result{display:none}
+.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0 18px}
+.pod{border:2px solid var(--ink);border-radius:10px;background:#fff;padding:14px 10px;text-align:center}
+.pod.p1{background:var(--ink);color:var(--paper);transform:translateY(-8px)}
+.pod .medal{font-size:15px;font-family:var(--mono);letter-spacing:.15em}
+.pod .fl{font-size:38px;display:block;margin:6px 0 2px}
+.pod b{font-size:15px;display:block}
+.pod .sc{font-family:var(--mono);font-size:12px;margin-top:4px}
+.row{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;font-size:14px}
+.row.fr{background:var(--orange);color:#fff;font-weight:800;box-shadow:3px 3px 0 var(--ink)}
+.row .rk{font-family:var(--mono);width:26px;font-size:12px}
+.row .nm{flex:1}
+.row .bar{height:9px;background:currentColor;border-radius:4px;opacity:.85}
+.row .sc{font-family:var(--mono);font-size:11.5px;width:38px;text-align:right}
+.frbanner{border:3px solid var(--ink);border-radius:10px;background:#fff;padding:12px;margin:16px 0;
+ font-weight:900;font-size:20px;text-transform:uppercase;text-align:center;transform:rotate(-1deg)}
+.frbanner span{color:var(--orange)}
+.corr{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:13px 14px;margin:14px 0}
+.corr h3{font-size:15px;text-transform:uppercase;margin-bottom:4px}
+.corr .cs{font-family:var(--mono);font-size:11px;opacity:.7;line-height:1.5;margin-bottom:10px}
+.cr{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13.5px}
+.cr .nm{flex:0 0 44%}
+.cr .bb{flex:1;height:12px;background:#EFE9DC;border:1.5px solid var(--ink);border-radius:6px;overflow:hidden}
+.cr .bb i{display:block;height:100%;background:var(--orange)}
+.cr .pc{font-family:var(--mono);font-size:12px;width:42px;text-align:right;font-weight:700}
+.cr.in{opacity:.5}
+.rev{font-family:var(--mono);font-size:11px;margin-top:10px;text-align:right;opacity:.7}
+.method{margin-top:14px}
+.method details{border:2px solid var(--ink);border-radius:9px;background:#fff}
+.method summary{cursor:pointer;padding:12px 14px;font-weight:800;font-size:14.5px;list-style:none}
+.method summary::-webkit-details-marker{display:none}
+.method summary::before{content:'▸ ';color:var(--orange)}
+.method details[open] summary::before{content:'▾ ';}
+.method details[open] summary{border-bottom:1px dashed #1b160f33}
+.mbody{padding:0 14px 14px;font-size:13.5px;line-height:1.65}
+.mbody code{background:#F4EFE3;padding:1px 5px;border-radius:4px;font-size:12px}
+.mbody ol{margin:8px 0 8px 18px}.mbody li{margin:5px 0}
+.resemble{margin-top:14px;border:2px solid var(--ink);border-radius:9px;background:#fff;padding:14px}
+.resemble h3{font-size:15px;text-transform:uppercase;margin-bottom:4px}
+.predlab{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.predbig{font-weight:900;font-size:clamp(24px,5.4vw,34px);line-height:1.06;margin:6px 0 4px;color:var(--orange)}
+.predpct{font-family:var(--mono);font-size:13px;margin-bottom:9px}
+.predsay{font-size:14.5px;line-height:1.55;border-left:4px solid var(--ink);padding-left:11px;margin-bottom:12px}
+.preddet{border:2px solid var(--ink);border-radius:9px;background:var(--paper)}
+.preddet summary{cursor:pointer;padding:11px 13px;font-weight:800;font-size:14px;list-style:none}
+.preddet summary::-webkit-details-marker{display:none}
+.preddet summary::before{content:'▸ ';color:var(--orange)}
+.preddet[open] summary{border-bottom:1px dashed #1b160f33}
+.preddet[open] summary::before{content:'▾ '}
+.resemble .rsub{font-family:var(--mono);font-size:11px;opacity:.7;line-height:1.55;margin-bottom:10px}
+.rrow{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:13.5px}
+.rrow .rn{flex:0 0 190px}
+.rrow .rb{flex:1;height:12px;background:#F4EFE3;border:1.5px solid var(--ink);border-radius:6px;overflow:hidden}
+.rrow .rf{display:block;height:100%;background:var(--orange);border-radius:5px}
+.rrow .rp{font-family:var(--mono);font-size:12px;width:44px;text-align:right}
+.rrow.inside .rf{background:#BDB4A4}
+.rtag{font-family:var(--mono);font-size:9.5px;background:#EFE9DC;border-radius:4px;padding:1px 5px;margin-left:6px}
+</style></head><body><div class="wrap">
+
+<div id="rf-load"><div class="box"><b>Ouverture du guichet…</b><ul id="loadlist"></ul></div></div>
+
+<div class="bureau"><b><a href="index.html">RF ★ LA RÉPUBLIQUE DES FAITS</a></b>
+<div class="form-no">GUICHET N°07 — CLASSEMENTS CONTRADICTOIRES<br>Formulaire CLASS-2027</div></div>
+
+<h1>Ton pays idéal existe.<br><span class="o">Mais tu ne sais pas<br>lequel c'est.</span></h1>
+<div class="sub">7 critères. 20 jetons à répartir. Tu choisis <b>avant</b> de voir les pays — ensuite, la machine classe. 16 pays, données réelles ONU · Banque mondiale · OMS · V-Dem.</div>
+<div class="provenance" id="prov"></div>
+
+<div class="card"><span class="step-tag">ÉTAPE 01 — RÉPARTIS TES 20 JETONS</span>
+<div class="budget"><b id="left">20</b><span class="left">jetons restants<br>à placer</span>
+<div class="presets">
+<button onclick="preset([6,5,4,3,1,1,0])">◉ priorité justice sociale</button>
+<button onclick="preset([0,2,2,2,3,6,5])">◉ priorité libertés</button>
+<button onclick="preset([3,3,3,3,3,3,2])">◉ équilibré</button>
+</div></div>
+<div id="crits"></div>
+<button class="go" id="go" disabled>Voir le classement</button>
+</div>
+
+<div class="card" id="result"><span class="step-tag">ÉTAPE 02 — TON CLASSEMENT</span>
+
+<div class="podium" id="podium"></div>
+<div class="frbanner" id="frb"></div>
+<div id="rows"></div>
+<div class="note"><b>Ce classement n'est pas le nôtre — c'est le tien.</b> Déplace 5 jetons et regarde le podium changer. C'est exactement ça, le débat : pas un désaccord sur les faits, un désaccord sur les jetons.</div>
+
+<div class="method" id="method"></div>
+<div class="resemble" id="resemble"></div>
+<button class="go" id="share">📮 Partager mon podium</button>
+<button class="dlbtn" id="dl">⬇ télécharger les données des 16 pays (CSV)</button>
+<button class="go alt" onclick="unlock()">↺ Changer mes jetons</button>
+<div class="rev" id="rev"></div>
+</div>
+
+</div>
+<footer>SOURCES (dernière valeur disponible) · Inégalités : Gini, Banque mondiale/PIP · Pauvreté : part sous 60 % du revenu médian, PIP via OWID · Travail : taux d'emploi 15+, Banque mondiale (proxy v0) · Femmes : GII, PNUD · Progrès humain : IDH (PNUD) + HALE (OMS) · Démocratie &amp; état de droit : V-Dem · Expression &amp; médias : V-Dem · † = données partielles (Singapour, NZ : pas de Gini/pauvreté comparables ; score calculé sur les critères disponibles)</footer>
+<script src="snapshot.js?v=1787875876"></script><script src="rf-data.js?v=1787875876"></script>
+<script>
+let DATA=null, C=null, w=[3,3,3,3,3,3,2], locked=false, revisions=0, lastScored=null, norm=null;
+const $=id=>document.getElementById(id);
+const infoDot=(k,src)=>{
+ const u=(RF.SRC[k]||{}).u; if(!u)return '';
+ return `<a class="info" href="${u}" target="_blank" rel="noopener"
+  title="Source : ${String(src).replace(/"/g,'')} — ouvrir les données">ⓘ</a>`;
+};
+const CRITS=[
+ {em:'⚖️',name:"Peu d'inégalités",src:'Gini · Banque mondiale',get:c=>c.gini,inv:true,k:'gini',sk:'gini'},
+ {em:'🍞',name:'Peu de pauvreté',src:'< 60 % du médian · PIP',get:c=>c.pov60,inv:true,k:'pov60',sk:'pov60'},
+ {em:'💪',name:'Le travail paie',src:"taux d'emploi · BM (proxy v0)",get:c=>c.emp,inv:false,k:'emp',sk:'emp'},
+ {em:'♀',name:'Droits des femmes',src:'GII · ONU',get:c=>c.gii,inv:true,k:'gii',sk:'gii'},
+ {em:'🫀',name:'Progrès humain',src:'IDH + santé · ONU/OMS',get:c=>(c.hdi==null||c.hale==null)?null:(c.hdi*100+c.hale)/2,inv:false,k:'hdi',sk:'hdi'},
+ {em:'🗳',name:'Démocratie & état de droit',src:'V-Dem',get:c=>(c.libdem==null||c.rol==null)?null:(c.libdem+c.rol)/2,inv:false,k:'rol',sk:'rol'},
+ {em:'📰',name:"Liberté d'expression & médias",src:'V-Dem',get:c=>c.foe,inv:false,k:'foe',sk:'foe'},
+];
+const ul=$('loadlist');
+RF.load((key,ok,label)=>{const li=document.createElement('li');li.textContent=label;li.className=ok?'ok':'ko';ul.appendChild(li);})
+.then(d=>{
+ DATA=d; C=d.countries;
+ $('prov').textContent = d.meta.source==='live' ? `● données chargées en direct le ${d.meta.date}` :
+   d.meta.source==='snapshot' ? `● API indisponibles — snapshot du ${d.meta.date}` : `● ${d.meta.source||'cache'}`;
+ norm=CRITS.map(cr=>{
+  const vals=C.map(cr.get).filter(v=>v!=null);
+  const mn=Math.min(...vals),mx=Math.max(...vals);
+  return c=>{const v=cr.get(c);if(v==null)return null;const s=(v-mn)/(mx-mn);return cr.inv?1-s:s};});
+ setTimeout(()=>$('rf-load').classList.add('done'),400);
+ render();
+ const q=new URLSearchParams(location.search).get('w');
+ if(q&&/^[0-8]{7}$/.test(q)){const p=[...q].map(Number);if(p.reduce((a,b)=>a+b,0)===20){w=p;render();$('go').click();}}
+});
+function total(){return w.reduce((a,b)=>a+b,0)}
+function render(){
+ $('crits').innerHTML='';
+ CRITS.forEach((cr,i)=>{
+  const d=document.createElement('div');d.className='crit';
+  let jets='';for(let j=0;j<8;j++)jets+=`<span class="jet ${j<w[i]?'on':''}"></span>`;
+  d.innerHTML=`<span class="em">${cr.em}</span><span class="lbl"><b>${cr.name}</b><small>${cr.src}</small></span>
+   ${infoDot(cr.sk,cr.src)}
+   <span class="jets">${jets}</span>
+   <span class="pm"><button onclick="mod(${i},-1)">−</button><button onclick="mod(${i},1)">+</button></span>`;
+  $('crits').appendChild(d);});
+ $('left').textContent=20-total();
+ $('go').disabled=total()!==20;
+}
+function mod(i,d){if(locked)return;if(d>0&&(total()>=20||w[i]>=8))return;if(d<0&&w[i]<=0)return;w[i]+=d;render()}
+function preset(p){if(locked)return;w=[...p];render()}
+$('go').onclick=()=>{
+ locked=true;revisions++;
+ const scored=C.map(c=>{
+  let s=0,wt=0,part=false;
+  CRITS.forEach((cr,i)=>{const v=norm[i](c);
+   if(v==null){part=w[i]>0||part;return}
+   s+=v*w[i];wt+=w[i]});
+  return {c,part,score:wt?s/wt*100:0};
+ }).sort((a,b)=>b.score-a.score);
+ lastScored=scored;
+ const med=['🥇 OR','🥈 ARGENT','🥉 BRONZE'];
+ $('podium').innerHTML=scored.slice(0,3).map((s,i)=>
+  `<div class="pod ${i===0?'p1':''}"><div class="medal">${med[i]}</div><span class="fl">${s.c.flag}</span><b>${s.c.name}${s.part?' †':''}</b><div class="sc">${s.score.toFixed(1)}/100</div></div>`).join('');
+ const frIdx=scored.findIndex(s=>s.c.iso==='FRA');
+ $('frb').innerHTML=`Avec <span>tes</span> critères, la France est <span>${frIdx+1}ᵉ</span> sur ${scored.length}`;
+ $('rows').innerHTML=scored.map((s,i)=>
+  `<div class="row ${s.c.iso==='FRA'?'fr':''}"><span class="rk">${String(i+1).padStart(2,'0')}</span>
+   <span>${s.c.flag}</span><span class="nm">${s.c.name}${s.part?' †':''}</span>
+   <span class="bar" style="width:${(s.score*1.6).toFixed(0)}px"></span>
+   <span class="sc">${s.score.toFixed(1)}</span></div>`).join('');
+ renderMethod(scored);
+ $('result').style.display='block';
+ $('rev').textContent = revisions>1 ? `tu as changé de pondération ${revisions-1} fois` : '';
+ if(location.hash!=='#open')$('result').scrollIntoView({behavior:'smooth'});
+ setTimeout(openAllForShot,300);
+};
+
+/* ---- comment le score est calculé, et à quoi il ressemble ---- */
+const EXT=[
+ {sk:'gdp',   n:'PIB par habitant',        get:v=>v.gdp?Math.log10(v.gdp):null},
+ {sk:'corr',  n:'Corruption politique',    get:v=>v.corr},
+ {sk:'top1',  n:'Part captée par les 1 %', get:v=>v.top1},
+ {sk:'homicide',n:'Homicides',             get:v=>v.homicide},
+ {sk:'tax',   n:'Recettes fiscales',       get:v=>v.tax},
+ {sk:'gov',   n:"Dépenses de l'État",      get:v=>v.gov},
+ {sk:'trade', n:'Ouverture commerciale',   get:v=>v.trade},
+ {sk:'happy', n:'Satisfaction de vie',     get:v=>v.happy},
+ {sk:'school',n:"Années d'école",          get:v=>v.school},
+];
+const INSIDE=[
+ {sk:'hdi', n:'IDH (ONU)',        get:v=>v.hdi!=null?v.hdi:null, warn:1},
+ {sk:'gini',n:'Gini (inégalités)',get:v=>v.gini,                 warn:1},
+ {sk:'rol', n:'État de droit',    get:v=>v.rol,                  warn:1},
+];
+function renderMethod(scored){
+ // 1. la méthode, en clair
+ const used=CRITS.map((cr,i)=>({cr,w:w[i]})).filter(x=>x.w>0)
+   .sort((a,b)=>b.w-a.w).map(x=>`${x.cr.name} (${x.w})`).join(' · ');
+ $('method').innerHTML=`<details><summary>Comment ce classement est calculé (et pourquoi les mêmes pays reviennent)</summary>
+ <div class="mbody">
+ <ol>
+  <li><b>Chaque critère est ramené sur une échelle 0-100</b> parmi les 16 pays : le meilleur du lot prend 100, le pire prend 0, les autres se placent proportionnellement entre les deux (<code>(valeur − min) / (max − min)</code>). Les critères où « moins, c'est mieux » (inégalités, pauvreté, inégalité de genre) sont retournés.</li>
+  <li><b>Tes jetons servent de poids.</b> Le score final est la moyenne pondérée : <code>Σ (note du critère × jetons) / Σ jetons</code>. Tes jetons actuels : ${used}.</li>
+  <li><b>Les données manquantes sont ignorées</b>, pas remplacées par une valeur inventée : un pays marqué † (Singapour, Nouvelle-Zélande) est noté sur les seuls critères disponibles. Cela l'avantage mécaniquement, puisqu'il échappe à ses critères faibles.</li>
+ </ol>
+ <p><b>Pourquoi les mêmes pays reviennent quoi que tu fasses ?</b> Parce que les 7 critères ne sont pas indépendants les uns des autres : un pays qui va bien sur l'un va généralement bien sur les autres. Déplacer des jetons change l'ordre des places, mais rarement le peloton de tête. Le bloc ci-dessous mesure exactement ça.</p>
+ </div></details>`;
+
+ // 2. à quel indicateur extérieur ton classement ressemble-t-il ?
+ // fusion des deux jeux : « monde » (14 indicateurs) + les 16 pays (IDH, Gini, pauvreté…)
+ const byIso={}; (DATA.world||[]).forEach(x=>byIso[x.iso]={...x.v});
+ (DATA.countries||[]).forEach(c=>{byIso[c.iso]=Object.assign(byIso[c.iso]||{},
+   {hdi:c.hdi,gini:c.gini,pov60:c.pov60,emp:c.emp,foe:c.foe});});
+ const S=scored.map(x=>({iso:x.c.iso,s:x.score}));
+ const test=list=>list.map(ind=>{
+   const pairs=S.map(x=>[ind.get(byIso[x.iso]||{}),x.s]).filter(p=>p[0]!=null&&isFinite(p[0]));
+   if(pairs.length<10)return null;
+   const r=RF.pearson(pairs);
+   return {n:ind.n,sk:ind.sk,r,pct:Math.round(r*r*100),n2:pairs.length};
+ }).filter(Boolean).sort((a,b)=>b.pct-a.pct);
+ const ext=test(EXT), ins=test(INSIDE);
+ const row=(x,cls)=>`<div class="rrow ${cls||''}"><span class="rn">${RF.srcLink(x.sk,x.n)}${x.r<0?'<span class="rtag">sens inverse</span>':''}</span>
+   <span class="rb"><span class="rf" style="width:${x.pct}%"></span></span><span class="rp">${x.pct} %</span></div>`;
+ const top=ext[0];
+ const second=ext[1];
+ $('resemble').innerHTML=`
+  <div class="predlab">Le meilleur prédicteur de ton classement est…</div>
+  <div class="predbig">${top?top.n:'—'} !</div>
+  <div class="predpct"><b>${top?top.pct:0} %</b> des écarts entre pays partagés${top&&top.r<0?' · <b>en sens inverse</b>':''}</div>
+  <div class="predsay">Autrement dit : sans regarder aucun de tes 7 critères, connaître seulement
+   ${top?'« '+top.n.toLowerCase()+' »':'cet indicateur'} suffirait à deviner l'essentiel de ton palmarès —
+   alors que tu ne l'as jamais choisi.${second?` Juste derrière : ${second.n.toLowerCase()} (${second.pct} %).`:''}</div>
+  <details class="preddet"><summary>Le classement complet des prédicteurs, et comment il se lit</summary>
+   <div class="mbody">
+    <p style="margin:0 0 10px">On compare ton score final à des indicateurs qui <b>ne font pas partie</b> de tes 7 critères,
+    sur les ${S.length} pays. Le pourcentage est la part des écarts entre pays que les deux mesures ont en commun (r²) :
+    100 % voudrait dire « exactement le même classement », 0 % « aucun rapport ».</p>
+    ${ext.map(x=>row(x)).join('')}
+    <p style="margin:14px 0 8px"><b>Pour mémoire</b> — ces trois-là sont <b>déjà contenus</b> dans tes critères :
+    leur ressemblance est mécanique, elle ne prouve rien.</p>
+    ${ins.map(x=>row(x,'inside')).join('')}
+    <p style="margin:14px 0 0">Change tes jetons et relance : le meilleur prédicteur change, lui aussi.
+    C'est la meilleure preuve que le classement n'est pas un déguisement d'un seul chiffre.</p>
+   </div></details>`;
+}
+
+function openAllForShot(){
+ if(location.hash!=='#open')return;
+ document.querySelectorAll('#method details,#resemble details').forEach(d=>d.open=true);
+}
+function unlock(){locked=false;$('result').style.display='none';window.scrollTo({top:0,behavior:'smooth'})}
+$('dl').onclick=()=>{
+ const WD={}; (DATA.world||[]).forEach(w=>WD[w.iso]=w.v);
+ RF.downloadCSV('rf-classement-16-pays.csv',
+  ['iso','pays','gini','pauvrete_60pc_median','taux_emploi','indice_inegalite_genre','idh','esperance_vie_bonne_sante','democratie_libérale','etat_de_droit','liberte_expression','pib_hab_ppa'],
+  C.map(c=>[c.iso,c.name,c.gini,c.pov60,c.emp,c.gii,c.hdi,c.hale,c.libdem,c.rol,c.foe,(WD[c.iso]||{}).gdp]));
+};
+$('share').onclick=async()=>{
+ const sc=lastScored, frIdx=sc.findIndex(s=>s.c.iso==='FRA');
+ const res=await RF.shareCard((ctx,W,H)=>{
+  RF.cardBase(ctx,W,H,'GUICHET N°07 — CLASSEMENT CONTRADICTOIRE');
+  ctx.fillStyle='#1B160F';ctx.font='900 50px system-ui';
+  ctx.fillText('MON PODIUM,',70,270);ctx.fillText('SELON MES 7 CRITÈRES :',70,330);
+  const med=['🥇','🥈','🥉'];
+  sc.slice(0,3).forEach((s,i)=>{
+   ctx.font='900 74px system-ui';
+   ctx.fillText(`${med[i]} ${s.c.flag} ${s.c.name}`,70,470+i*110);
+   ctx.font='30px ui-monospace, monospace';
+   ctx.fillText(s.score.toFixed(1)+'/100',830,470+i*110);});
+  ctx.save();ctx.translate(540,970);ctx.rotate(-0.06);
+  ctx.strokeStyle='#FF4D00';ctx.fillStyle='#FF4D00';ctx.lineWidth=10;
+  ctx.strokeRect(-430,-80,860,160);
+  ctx.font='900 64px system-ui';ctx.textAlign='center';
+  ctx.fillText(`LA FRANCE EST ${frIdx+1}ᵉ / ${sc.length}`,0,22);ctx.restore();
+  ctx.textAlign='left';ctx.font='900 34px system-ui';ctx.fillStyle='#1B160F';
+  ctx.fillText('Mêmes données, tes jetons : quel podium ? →',70,1180);
+ },'podium-rf.png',`Mon podium selon mes 7 critères : ${sc[0].c.name}, ${sc[1].c.name}, ${sc[2].c.name}. La France est ${frIdx+1}ᵉ/${sc.length}. Tes jetons, ton podium : ${location.origin+location.pathname}?w=${w.join('')}`);
+ $('share').textContent = res==='shared' ? '📮 Partagé !' : '📮 Podium téléchargé (PNG)';
+};
+</script><script>RF.mountNav("classement.html")</script>
+</body></html>

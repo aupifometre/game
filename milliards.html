@@ -1,0 +1,259 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guichet 09 — La chaîne des milliards · La République des Faits</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
+<link rel="stylesheet" href="styles.css?v=1787875876">
+<style>
+.mes{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin-top:8px}
+.m{border:2px solid var(--ink);border-radius:8px;background:#fff;padding:11px;cursor:pointer;transition:transform .08s}
+.m:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.m.sel{background:var(--ink);color:var(--paper)}
+.m b{display:block;font-size:14.5px;line-height:1.2}
+.m .md{font-family:var(--mono);font-size:11px;margin-top:5px;color:var(--orange);font-weight:700}
+.m.sel .md{color:#FFA07A}
+.m small{display:block;font-family:var(--mono);font-size:9.5px;opacity:.7;margin-top:4px;line-height:1.4}
+.step{border-top:2px dashed #1b160f33;padding:13px 0}
+.step:first-child{border-top:none}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sh b{font-size:14.5px}
+.sh .v{font-family:var(--mono);font-weight:700;font-size:15px;white-space:nowrap}
+.src{font-family:var(--mono);font-size:10px;opacity:.65;line-height:1.5;margin-top:3px}
+input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
+.step.locked{opacity:.42}
+.step.locked input[type=range]{pointer-events:none;filter:grayscale(1)}
+.step.locked .sh b::after{content:' 🔒';font-size:12px}
+.lockbox{display:flex;gap:11px;align-items:flex-start;background:#fff;border:2px solid var(--ink);
+ border-radius:9px;padding:12px;margin-bottom:6px;cursor:pointer}
+.lockbox input{margin-top:3px;width:19px;height:19px;accent-color:var(--orange);flex:0 0 19px}
+.lockbox b{font-size:14.5px;display:block}
+.lockbox small{display:block;font-family:var(--mono);font-size:10.5px;line-height:1.55;opacity:.75;margin-top:4px}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin:10px 0 4px}
+.cat{display:flex;gap:9px;align-items:flex-start;border:2px solid var(--ink);border-radius:8px;
+ background:#fff;padding:9px 10px;cursor:pointer;font-size:13px}
+.cat.on{background:var(--ink);color:var(--paper)}
+.cat input{margin-top:2px;accent-color:var(--orange);flex:0 0 16px;width:16px;height:16px}
+.cat b{display:block;font-size:13.5px;line-height:1.2}
+.cat small{display:block;font-family:var(--mono);font-size:9.5px;opacity:.72;margin-top:3px;line-height:1.4}
+.flow{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:4px 14px;margin:14px 0}
+.fl{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;
+ border-top:1px dashed #1b160f26;font-size:14px}
+.fl:first-child{border-top:none}
+.fl .lb{flex:1}
+.fl .lb small{display:block;font-family:var(--mono);font-size:9.5px;opacity:.6}
+.fl .vv{font-family:var(--mono);font-weight:700;white-space:nowrap}
+.fl.neg .vv{color:var(--red)}
+.fl.tot{background:var(--ink);color:var(--paper);margin:0 -14px;padding:12px 14px;border-radius:0 0 8px 8px}
+.punch{border:3px solid var(--ink);border-radius:10px;background:var(--orange);color:#fff;
+ padding:18px;text-align:center;margin:16px 0;transform:rotate(-.6deg);box-shadow:5px 5px 0 var(--ink)}
+.punch .n{font-weight:900;font-size:clamp(38px,10vw,64px);line-height:1}
+.punch .l{font-family:var(--mono);font-size:12.5px;margin-top:6px}
+.cmp{font-size:14.5px;line-height:1.55;background:#fff;border:2px solid var(--ink);border-radius:8px;padding:12px 14px}
+.cmp b{color:var(--orange)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.tab{font-family:var(--mono);font-size:11px;padding:6px 11px;border:2px solid var(--ink);
+ background:#fff;border-radius:6px;cursor:pointer}
+.tab.on{background:var(--ink);color:var(--paper)}
+</style></head><body><div class="wrap">
+
+<div class="bureau"><b><a href="index.html">RF ★ LA RÉPUBLIQUE DES FAITS</a></b>
+<div class="form-no">GUICHET N°09 — CONVERSION DES MILLIARDS<br>Formulaire CHAINE-2027</div></div>
+
+<h1>Un milliard,<br>ça fait combien<br><span class="o">sur une fiche de paie ?</span></h1>
+<div class="sub">On annonce des mesures en milliards. Personne ne vit en milliards. Cette machine déroule la chaîne complète — et elle s'applique aux mesures de tous les bords, sans exception.</div>
+
+<div class="card"><span class="step-tag">ÉTAPE 01 — LA MESURE</span>
+<div class="tabs"><span class="tab on" data-f="all">toutes</span><span class="tab" data-f="rec">↑ recettes</span><span class="tab" data-f="dep">↓ dépenses</span></div>
+<div class="mes" id="mes"></div></div>
+
+<div class="card"><span class="step-tag">ÉTAPE 02 — LES HYPOTHÈSES</span>
+<div class="step"><div class="sh"><b>Ce qui s'évapore : réponses comportementales</b><span class="v" id="v1">54 %</span></div>
+<div class="src">Public Sénat / Conseil d'analyse économique : « pour chaque euro prélevé par une hausse de la fiscalité sur les hauts patrimoines, 54 centimes disparaissent du fait des réponses comportementales ». Sur une baisse de dépense, mets 0 %.</div>
+<input type="range" id="s1" min="0" max="80" value="54"></div>
+
+<label class="lockbox"><input type="checkbox" id="unlock">
+<span><b>L'État dépense différemment</b><small>Par défaut, on suppose que la répartition du budget et les règles de paie
+restent celles d'aujourd'hui — les trois réglages ci-dessous sont donc figés. Coche pour supposer une réallocation
+et les débloquer.</small></span></label>
+
+<div class="step locked" id="lk1"><div class="sh"><b>Part réellement fléchée vers les salaires visés</b><span class="v" id="v2">8,9 %</span></div>
+<div class="src">8,9 % = ce que l'enseignement pèse dans le budget actuel (89 € sur 1 000 € de dépense publique, FIPECO/INSEE). Si rien ne change dans la répartition, l'argent nouveau se répartit comme le reste. Monte à 100 % si tu supposes un fléchage intégral.</div>
+<input type="range" id="s2" min="1" max="100" value="9"></div>
+
+<div class="step locked" id="lk2"><div class="sh"><b>Charges patronales que l'État se paie à lui-même</b><span class="v" id="v3">85 %</span></div>
+<div class="src">Taux de contribution employeur de l'État pour les pensions civiles (CAS Pensions). 100 € de coût employeur ≈ 54 € de brut.</div>
+<input type="range" id="s3" min="0" max="100" value="85"></div>
+
+<div class="step locked" id="lk3"><div class="sh"><b>Du brut au net, puis impôt sur le revenu</b><span class="v" id="v4">22 % + 12 %</span></div>
+<div class="src">Cotisations salariales puis IR effectif moyen. Ce qui reste, c'est ce qui arrive sur le compte en banque.</div>
+<input type="range" id="s4" min="0" max="45" value="22"></div>
+
+<div class="step"><div class="sh"><b>Qui en bénéficie</b><span class="v" id="v5">857 000</span></div>
+<div class="src">Coche les corps concernés. Chaque case ajoute ses effectifs <b>et</b> la part de dépense publique
+correspondante — dont seule une fraction part en rémunérations (le reste finance les bâtiments, le matériel,
+les prestations). Le curseur se limite au total coché.</div>
+<div class="cats" id="cats"></div>
+<input type="range" id="s5" min="50000" max="857000" step="1000" value="857000">
+<div class="src" id="catcalc"></div></div>
+</div>
+
+<div class="card"><span class="step-tag">ÉTAPE 03 — LA CHAÎNE</span>
+<div class="flow" id="flow"></div>
+<div class="punch"><div class="n" id="punch">—</div><div class="l" id="punchl">net, par mois, par personne</div></div>
+<div class="cmp" id="cmp"></div>
+<button class="go" id="share">📮 Partager le calcul</button>
+<div class="note">Cette machine ne dit pas si la mesure est bonne. Elle dit ce qu'elle produit, à hypothèses affichées. Bouge les curseurs : c'est fait pour. Et elle rétrécit <b>toutes</b> les mesures, y compris celles qu'on trouve sympathiques — c'est précisément ce qui la rend utilisable dans une discussion.</div>
+</div>
+
+</div>
+<footer>Répartition du budget : FIPECO / INSEE (2024, 1 000 € de dépense publique = 571 € protection sociale,
+89 € enseignement). Réponses comportementales : Conseil d'analyse économique, cité par Public Sénat.
+Charges employeur État : CAS Pensions. Effectifs : DEPP (enseignants), DREES (hospitaliers).
+Les rendements annoncés sont ceux de leurs promoteurs — c'est le point de départ, pas une validation.
+</footer>
+
+<script src="rf-data.js?v=1787875876"></script>
+<script>
+const $=id=>document.getElementById(id);
+const eur=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:0});
+const md=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:1});
+const MES=[
+ {id:'zucman',t:'rec',n:'Taxe Zucman',md:20,d:'2 % sur les patrimoines > 100 M€',
+  s:'Rendement annoncé par ses promoteurs : 20 Md€. Les estimations basses tournent autour de 5 Md€.',el:54},
+ {id:'fraude',t:'rec',n:'Récupérer la fraude fiscale',md:100,d:'estimation haute du manque à gagner',
+  s:'100 Md€ = écart théorique estimé (Solidaires Finances Publiques). Le recouvrement réel constaté est de 11 à 16 Md€/an — mets le curseur d\'évaporation à ~85 % pour retrouver ce chiffre.',el:85},
+ {id:'niches',t:'rec',n:'Supprimer les niches fiscales',md:10,d:'coup de rabot sur les dépenses fiscales',
+  s:'Ordre de grandeur d\'un rabot ambitieux sur les 88 Md€ de dépenses fiscales recensées par le Sénat.',el:30},
+ {id:'defense',t:'dep',n:'Couper 10 % du budget Défense',md:5,d:'redéploiement d\'une dépense existante',
+  s:'Une baisse de dépense n\'a pas de réponse comportementale des contribuables : curseur d\'évaporation à 0 %.',el:0},
+ {id:'cotis',t:'dep',n:'Supprimer 10 % des allègements de cotisations',md:7.5,d:'sur les 75 Md€ d\'allègements bas salaires',
+  s:'Attention : ces allègements portent sur les bas salaires. L\'effet emploi n\'est pas dans cette machine — elle ne calcule que le trajet de l\'argent.',el:20},
+];
+let cur=MES[0];
+/* Effectifs : rapport annuel sur l'état de la fonction publique (DGAFP) et DEPP.
+   Part du budget : FIPECO/INSEE par fonction. Part salaires : ESTIMATION assumée —
+   aucun budget ministériel ne part à 100 % en rémunérations. */
+const CATS=[
+ {id:'ens', n:'Enseignants',                 eff:857000,  bud:8.9,  sal:0.75,
+  s:"Éducation nationale · 8,9 % de la dépense publique, dont ~75 % de rémunérations (est.)"},
+ {id:'ter', n:'Fonction publique territoriale', eff:1900000, bud:11.0, sal:0.50,
+  s:"Communes, départements, régions · ~11 % de la dépense (est.), dont ~50 % de rémunérations (est.)"},
+ {id:'hop', n:'Fonction publique hospitalière', eff:1200000, bud:20.6, sal:0.20,
+  s:"Santé · 20,6 % de la dépense, mais l'essentiel finance les soins de ville et les médicaments : ~20 % de masse salariale hospitalière (est.)"},
+ {id:'aut', n:'Autres fonctionnaires (armée incluse)', eff:1750000, bud:12.0, sal:0.45,
+  s:"Défense, police, justice, administration · ~12 % de la dépense (est.), dont ~45 % de rémunérations (est.)"},
+];
+let picked={ens:true,ter:false,hop:false,aut:false};
+function renderCats(){
+ $('cats').innerHTML='';
+ CATS.forEach(c=>{
+  const d=document.createElement('label');d.className='cat'+(picked[c.id]?' on':'');
+  d.innerHTML=`<input type="checkbox" ${picked[c.id]?'checked':''}><span><b>${c.n}</b>
+   <small>${c.eff.toLocaleString('fr-FR')} agents · ${c.s}</small></span>`;
+  d.querySelector('input').onchange=e=>{
+   picked[c.id]=e.target.checked;
+   if(!Object.values(picked).some(Boolean)){picked[c.id]=true;e.target.checked=true;return}
+   renderCats();syncCats();calc();};
+  $('cats').appendChild(d);});
+}
+function catTotals(){
+ let eff=0,part=0;
+ CATS.forEach(c=>{ if(!picked[c.id])return; eff+=c.eff; part+=c.bud*c.sal; });
+ return {eff,part};
+}
+function syncCats(){
+ const t=catTotals();
+ const sl=$('s5'); sl.max=t.eff; sl.min=Math.min(50000,t.eff);
+ if(+sl.value>t.eff||autoEff) sl.value=t.eff;
+ if(!$('unlock').checked) $('s2').value=Math.max(1,Math.round(t.part));
+}
+let autoEff=true;
+function renderMes(f){
+ $('mes').innerHTML='';
+ MES.filter(m=>f==='all'||m.t===f).forEach(m=>{
+  const d=document.createElement('div');d.className='m'+(m.id===cur.id?' sel':'');
+  d.innerHTML=`<b>${m.n}</b><span class="md">${m.t==='rec'?'↑':'↓'} ${md(m.md)} Md€ annoncés</span><small>${m.d}</small>`;
+  d.onclick=()=>{cur=m;$('s1').value=m.el;renderMes(f);calc()};
+  $('mes').appendChild(d);});
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+ renderMes(t.dataset.f);});
+
+function calc(){
+ const ev=+$('s1').value, part=+$('s2').value, pat=+$('s3').value, cot=+$('s4').value, nb=+$('s5').value;
+ const ir=12;
+ $('v1').textContent=ev+' %'; $('v2').textContent=part.toLocaleString('fr-FR')+' %';
+ $('v3').textContent=pat+' %'; $('v4').textContent=cot+' % + '+ir+' %';
+ $('v5').textContent=eur(nb);
+ const t=catTotals();
+ $('catcalc').innerHTML=`Sélection : <b>${eur(t.eff)} agents</b> · part de la dépense publique réellement
+  consacrée à leurs salaires : <b>${t.part.toLocaleString('fr-FR',{maximumFractionDigits:1})} %</b>
+  ${$('unlock').checked?' <i>(remplacée par ton curseur)</i>':' — reportée automatiquement sur le réglage verrouillé ci-dessus.'}`;
+ const a0=cur.md*1e9;
+ const a1=a0*(1-ev/100);
+ const a2=a1*part/100;
+ const perYearCout=a2/nb;
+ const brut=perYearCout/(1+pat/100);
+ const net=brut*(1-cot/100)*(1-ir/100);
+ const mois=net/12;
+ const rows=[
+  ['Annoncé','ce que dit la mesure',a0,''],
+  [`− ${ev} % qui s'évaporent`,'réponses comportementales, optimisation, non-recouvrement',-(a0-a1),'neg'],
+  ['= réellement encaissé','',a1,''],
+  [`× ${part} % qui arrivent aux salaires visés`,'clé de répartition du budget',-(a1-a2),'neg'],
+  ['= enveloppe pour ces salaires','',a2,''],
+ ];
+ let html=rows.map(r=>`<div class="fl ${r[3]}"><span class="lb">${r[0]}${r[2+0]?'':''}<small>${r[1]}</small></span>
+  <span class="vv">${r[3]==='neg'?'':''}${eur(r[2]/1e6)} M€</span></div>`).join('');
+ html+=`<div class="fl"><span class="lb">÷ ${eur(nb)} personnes<small>coût employeur annuel par personne</small></span>
+   <span class="vv">${eur(perYearCout)} €</span></div>`;
+ html+=`<div class="fl neg"><span class="lb">− ${pat} % de charges employeur<small>l'État se les paie à lui-même</small></span>
+   <span class="vv">${eur(brut)} € brut</span></div>`;
+ html+=`<div class="fl neg"><span class="lb">− ${cot} % de cotisations, − ${ir} % d'IR<small>ce qui arrive vraiment sur le compte</small></span>
+   <span class="vv">${eur(net)} € net / an</span></div>`;
+ html+=`<div class="fl tot"><span class="lb"><b>Sur la fiche de paie</b><small>net mensuel supplémentaire</small></span>
+   <span class="vv">${mois.toLocaleString('fr-FR',{maximumFractionDigits:0})} € / mois</span></div>`;
+ $('flow').innerHTML=html;
+ $('punch').textContent=mois<1?'moins d\'1 €':'+ '+mois.toLocaleString('fr-FR',{maximumFractionDigits:0})+' €';
+ const need=12e9*(nb/2070000);
+ $('cmp').innerHTML=`<b>Le point de comparaison :</b> revaloriser de <b>+10 %</b> ces ${eur(nb)} personnes coûte environ
+  <b>${(need/1e9).toLocaleString('fr-FR',{maximumFractionDigits:1})} Md€ par an</b> — soit
+  <b>${(need/1672e9*100).toLocaleString('fr-FR',{maximumFractionDigits:1})} %</b> du budget public total (1 672 Md€).
+  La question n'est donc pas seulement « combien on lève », mais « combien on réalloue ».`;
+ window._m={mois,a0,a1,a2,ev,part,nb};
+}
+['s1','s2','s3','s4'].forEach(id=>$(id).oninput=calc);
+$('s5').oninput=()=>{autoEff=false;calc()};
+$('unlock').onchange=e=>{
+ const on=e.target.checked;
+ ['s2','s3','s4'].forEach(id=>$(id).disabled=!on);
+ ['lk1','lk2','lk3'].forEach(id=>$(id).classList.toggle('locked',!on));
+ if(!on){autoEff=true;$('s3').value=85;$('s4').value=22;syncCats();}
+ calc();};
+['s2','s3','s4'].forEach(id=>$(id).disabled=true);
+$('share').onclick=async()=>{
+ const m=window._m;
+ const res=await RF.shareCard((ctx,W,H)=>{
+  RF.cardBase(ctx,W,H,'GUICHET N°09 — CHAÎNE DES MILLIARDS');
+  ctx.fillStyle='#1B160F';ctx.font='900 46px system-ui';
+  ctx.fillText(cur.n.toUpperCase(),70,250);
+  ctx.font='34px system-ui';ctx.fillText(`${md(cur.md)} milliards annoncés`,70,305);
+  const steps=[[`− ${m.ev} % qui s'évaporent`,`${md(m.a1/1e9)} Md€ encaissés`],
+   [`× ${m.part} % vers les salaires visés`,`${eur(m.a2/1e6)} M€`],
+   [`÷ ${eur(m.nb)} personnes, net de charges`,`—`]];
+  let y=400;
+  steps.forEach(s=>{ctx.font='700 30px system-ui';ctx.fillStyle='#1B160F';ctx.fillText(s[0],70,y);
+   ctx.font='30px ui-monospace, monospace';ctx.fillStyle='#D92D20';
+   ctx.textAlign='right';ctx.fillText(s[1],1010,y);ctx.textAlign='left';y+=62;});
+  ctx.fillStyle='#FF4D00';ctx.fillRect(70,y+30,940,240);
+  ctx.fillStyle='#fff';ctx.font='900 110px system-ui';ctx.textAlign='center';
+  ctx.fillText('+ '+m.mois.toLocaleString('fr-FR',{maximumFractionDigits:0})+' € / mois',540,y+160);
+  ctx.font='28px ui-monospace, monospace';ctx.fillText('net, par personne',540,y+215);
+  ctx.textAlign='left';ctx.font='900 30px system-ui';ctx.fillStyle='#1B160F';
+  ctx.fillText('Bouge les curseurs toi-même →',70,H-115);
+ },'chaine-rf.png',`« ${cur.n} » : ${md(cur.md)} Md€ annoncés → ${m.mois.toLocaleString('fr-FR',{maximumFractionDigits:0})} € net/mois par personne. Refais le calcul avec tes hypothèses : ${location.origin+location.pathname}`);
+ $('share').textContent=res==='shared'?'📮 Partagé !':'📮 Image téléchargée (PNG)';
+};
+renderMes('all');renderCats();syncCats();calc();
+</script><script>RF.mountNav("milliards.html")</script>
+</body></html>

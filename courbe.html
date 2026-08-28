@@ -1,0 +1,221 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guichet 02 — Dessine la courbe · La République des Faits</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✏️</text></svg>">
+<link rel="stylesheet" href="styles.css?v=1787875876">
+<style>
+.qbig{font-weight:900;font-size:22px;line-height:1.2;margin:4px 0 6px}
+.qsub{font-family:var(--mono);font-size:12px;line-height:1.6;opacity:.8;margin-bottom:12px}
+.board{position:relative;background:#fff;border:2px solid var(--ink);border-radius:10px;touch-action:none;cursor:crosshair}
+svg{width:100%;height:auto;display:block}
+.instr{font-family:var(--mono);font-size:11.5px;text-align:center;margin-top:8px;opacity:.75}
+.pill{display:inline-block;background:var(--ink);color:var(--paper);font-family:var(--mono);
+ font-size:11px;padding:4px 9px;border-radius:20px;margin:2px 4px 2px 0}
+#res{display:none}
+.verdictline{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:6px 0 12px;padding-right:130px}
+.vbig{font-weight:900;font-size:44px}
+.vlab{font-family:var(--mono);font-size:12px}
+.why{font-size:15.5px;line-height:1.5;background:#fff;border:2px solid var(--ink);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.why b{color:var(--orange)}
+.info{display:inline-flex;width:20px;height:20px;border-radius:50%;align-items:center;
+ justify-content:center;font-size:12.5px;text-decoration:none;color:var(--ink);opacity:.4;
+ vertical-align:-4px;transition:opacity .12s,background .12s}
+.info:hover{opacity:1;background:#1b160f14}
+.claim{font-size:13.5px;line-height:1.5;background:#fff;border:2px solid var(--ink);
+ border-radius:8px;padding:9px 11px;margin-bottom:12px}
+.tagp{display:inline-block;background:var(--orange);color:#fff;font-family:var(--mono);font-size:10px;
+ font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:20px;margin-right:8px}
+.picker{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:8px}
+.pick{border:2px solid var(--ink);border-radius:8px;background:#fff;padding:10px;cursor:pointer;
+ font-size:13.5px;font-weight:700;line-height:1.25;text-align:left}
+.pick:hover{background:var(--ink);color:var(--paper)}
+.pick small{display:block;font-family:var(--mono);font-size:9.5px;font-weight:400;opacity:.7;margin-top:3px}
+</style></head><body><div class="wrap">
+
+<div class="bureau"><b><a href="index.html">RF ★ LA RÉPUBLIQUE DES FAITS</a></b>
+<div class="form-no">GUICHET N°02 — TRACÉS DE MÉMOIRE<br>Formulaire COURBE-2027</div></div>
+
+<h1>Tu crois savoir<br>comment ça a évolué.<br><span class="o">Dessine-le.</span></h1>
+<div class="sub">Le début de la courbe t'est donné. À toi de tracer la suite au doigt ou à la souris. La vraie courbe apparaît ensuite par-dessus la tienne.</div>
+
+<div class="card"><span class="step-tag">ÉTAPE 01 — LE TRACÉ</span>
+<div class="qbig" id="q">—</div>
+<div class="qsub" id="qsub">—</div>
+<div class="claim" id="claim"></div>
+<div class="board" id="board"><div id="chart"></div></div>
+<div class="instr" id="instr">✏️ trace ton trait dans la zone grisée — pas besoin d'aller pile au bout</div>
+<button class="go" id="go" disabled>Valider mon tracé</button>
+</div>
+
+<div class="card" id="res"><span class="step-tag">ÉTAPE 02 — LA RÉALITÉ</span>
+<div class="stamp" id="stamp"></div>
+<div class="verdictline"><span class="vbig" id="score"></span><span class="vlab" id="scorelab"></span></div>
+<div class="why" id="why"></div>
+<div><span class="pill" id="p1"></span><span class="pill" id="p2"></span><span class="pill" id="p3"></span></div>
+<button class="go" id="share">📮 Partager mon tracé</button>
+<button class="dlbtn" id="dl">⬇ télécharger cette série (CSV)</button>
+<div class="picker" id="picker"></div>
+</div>
+
+</div>
+<footer>SOURCES · Extrême pauvreté : Banque mondiale / PIP via Our World in Data ·
+Part des 1 % : World Inequality Database (Piketty, Saez, Zucman) ·
+Mortalité infantile, dépenses publiques, homicides : Banque mondiale (séries FRA) ·
+Retraites : Eurostat (spr_exp_pens) · Fécondité, industrie manufacturière, santé : Banque mondiale ·
+Nucléaire, éolien, solaire : Ember / IRENA via Our World in Data · Dette, pauvreté, revenu médian : Eurostat · Part des salaires : OIT · <b>21 courbes</b>, séries relevées le 28/08/2026 ·
+<a href="index.html">← tous les guichets</a></footer>
+
+<script src="curves.js?v=1787875876"></script><script src="rf-data.js?v=1787875876"></script>
+<script>
+const $=id=>document.getElementById(id);
+const KEYS=Object.keys(RF_CURVES);
+let key=null, C=null, years=[], vals=[], anchor=0, user=[], drawing=false, done=false;
+const W=680,H=400,P=52;
+let xmin,xmax,ymin,ymax;
+const X=x=>P+(x-xmin)/(xmax-xmin)*(W-2*P);
+const Y=y=>H-P-(y-ymin)/(ymax-ymin)*(H-2*P);
+const invX=px=>xmin+(px-P)/(W-2*P)*(xmax-xmin);
+const invY=py=>ymin+(H-P-py)/(H-2*P)*(ymax-ymin);
+
+function pickCurve(k){
+ key=k; C=RF_CURVES[k]; done=false;
+ years=C.data.map(d=>d[0]); vals=C.data.map(d=>d[1]);
+ xmin=years[0]; xmax=years[years.length-1];
+ const lo=Math.min(...vals), hi=Math.max(...vals), pad=(hi-lo)*0.35;
+ ymin=Math.max(0,lo-pad); ymax=hi+pad;
+ anchor=Math.max(1,Math.round(years.length*0.15));
+ user=vals.map((v,i)=>i<anchor?v:null);
+ $('q').textContent=C.q;
+ $('qsub').innerHTML=C.sub+' · source : '+C.src+
+   ' <a class="info" href="'+C.url+'" target="_blank" rel="noopener" title="Ouvrir les données à la source">ⓘ</a>';
+ $('claim').innerHTML='<span class="tagp">'+C.tag+'</span>'+C.claim;
+ $('res').style.display='none'; $('go').disabled=true; touched=false;
+ $('instr').textContent='✏️ trace ton trait dans la zone grisée — pas besoin d\'aller pile au bout';
+ render();
+}
+function path(arr,from){
+ let d='';
+ for(let i=from;i<arr.length;i++){ if(arr[i]==null)continue;
+  d+=(d?'L':'M')+X(years[i]).toFixed(1)+' '+Y(arr[i]).toFixed(1)+' '; }
+ return d;
+}
+function render(reveal){
+ const gx=X(years[anchor-1]);
+ const ticks=[0,0.25,0.5,0.75,1].map(f=>{
+  const yv=ymin+(ymax-ymin)*f;
+  return `<line x1="${P}" y1="${Y(yv)}" x2="${W-P}" y2="${Y(yv)}" stroke="#1B160F" stroke-opacity=".1"/>
+   <text x="${P-8}" y="${Y(yv)+4}" text-anchor="end" font-size="11" font-family="ui-monospace,monospace" opacity=".6">${(+yv.toFixed(1)).toLocaleString('fr-FR')}</text>`;}).join('');
+ const yl=[years[0],years[Math.floor(years.length/2)],years[years.length-1]].map(y=>
+  `<text x="${X(y)}" y="${H-P+20}" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" opacity=".6">${y}</text>`).join('');
+ $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" id="svg">
+  <rect width="${W}" height="${H}" fill="#fff" rx="8"/>
+  <rect x="${gx}" y="${P-14}" width="${W-P-gx}" height="${H-2*P+28}" fill="#1B160F" fill-opacity=".045"/>
+  ${ticks}${yl}
+  <text x="${P-8}" y="${P-24}" font-size="11" font-family="ui-monospace,monospace" opacity=".6">${C.unit}</text>
+  <path d="${path(vals,0).split('L').slice(0,anchor).join('L')}" fill="none" stroke="#1B160F" stroke-width="3.5"/>
+  <path id="upath" d="${path(user,anchor-1)}" fill="none" stroke="#FF4D00" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${done?'0':'1 0'}"/>
+  ${reveal?`<path d="${path(vals,anchor-1)}" fill="none" stroke="#1B160F" stroke-width="3.5"/>
+   <circle cx="${X(xmax)}" cy="${Y(vals[vals.length-1])}" r="6" fill="#1B160F"/>
+   <text x="${X(xmax)-6}" y="${Y(vals[vals.length-1])-14}" text-anchor="end" font-size="14" font-weight="800" font-family="system-ui">réalité : ${(+vals[vals.length-1].toFixed(1)).toLocaleString('fr-FR')} ${C.unit}</text>`:''}
+ </svg>`;
+ bind();
+}
+let touched=false;
+/* Complète tous les trous : interpolation entre points connus (l'ancre en est un),
+   puis prolongation à plat après le dernier point tracé. C'était le bug :
+   démarrer après l'ancre ou s'arrêter avant la fin laissait des index à null. */
+function completeAll(){
+ let prev=anchor-1;                       // toujours connu (fin de la portion donnée)
+ for(let i=anchor;i<years.length;i++){
+  if(user[i]==null)continue;
+  for(let j=prev+1;j<i;j++) user[j]=user[prev]+(user[i]-user[prev])*(j-prev)/(i-prev);
+  prev=i;
+ }
+ for(let j=prev+1;j<years.length;j++) user[j]=user[prev];   // queue à plat
+}
+function bind(){
+ const svg=$('svg'); if(!svg||done)return;
+ let strokePrev=null;
+ const pt=e=>{const r=svg.getBoundingClientRect(); const t=e.touches?e.touches[0]:e;
+  return [(t.clientX-r.left)/r.width*W,(t.clientY-r.top)/r.height*H];};
+ const idxOf=px=>{const yr=invX(px);let i=0,best=1e9;
+  years.forEach((y,j)=>{const d=Math.abs(y-yr);if(d<best){best=d;i=j}});return i;};
+ const put=(px,py)=>{
+  let i=idxOf(px); if(i<anchor)i=anchor;                    // clamp au lieu d'ignorer
+  const v=Math.max(ymin,Math.min(ymax,invY(py)));
+  if(strokePrev!==null&&strokePrev!==i){                    // relie dans les deux sens
+   const a=Math.min(strokePrev,i), b=Math.max(strokePrev,i);
+   const va=strokePrev<i?user[strokePrev]:v, vb=strokePrev<i?v:user[strokePrev];
+   for(let j=a+1;j<b;j++) user[j]=va+(vb-va)*(j-a)/(b-a);
+  }
+  user[i]=v; strokePrev=i; touched=true;
+  $('upath').setAttribute('d',path(user,anchor-1));
+  $('go').disabled=false;
+  $('instr').textContent="✓ tu peux corriger ton trait, ou valider — les trous seront comblés automatiquement";
+ };
+ const start=e=>{drawing=true;strokePrev=null;const[px,py]=pt(e);put(px,py);e.preventDefault()};
+ const move=e=>{if(!drawing)return;const[px,py]=pt(e);put(px,py);e.preventDefault()};
+ const end=()=>{if(!drawing)return;drawing=false;strokePrev=null;
+  if(touched){completeAll();$('upath').setAttribute('d',path(user,anchor-1));}};
+ svg.onmousedown=start; svg.onmousemove=move; window.onmouseup=end;
+ svg.ontouchstart=start; svg.ontouchmove=move; window.ontouchend=end; window.ontouchcancel=end;
+}
+$('go').onclick=()=>{
+ completeAll();
+ done=true; render(true);
+ const range=Math.max(...vals)-Math.min(...vals);
+ let err=0,n=0;
+ for(let i=anchor;i<vals.length;i++){ if(user[i]==null)continue; err+=Math.abs(user[i]-vals[i]); n++; }
+ const mae=err/n, sc=Math.max(0,Math.round(100-100*mae/range));
+ $('score').textContent=sc+' / 100';
+ $('scorelab').textContent=`écart moyen avec la réalité : ${(+mae.toFixed(1)).toLocaleString('fr-FR')} ${C.unit}`;
+ const st=$('stamp'); st.className='stamp '+(sc>=70?'win':'lose');
+ st.textContent=sc>=85?'JUSTE ✓':sc>=70?'PAS LOIN':'RATÉ ✗';
+ st.classList.remove('show'); setTimeout(()=>st.classList.add('show'),600);
+ $('why').innerHTML='<b>Ce que dit la courbe :</b> '+C.why+
+  ' <a class="info" href="'+C.url+'" target="_blank" rel="noopener" title="Ouvrir les données à la source">ⓘ</a>';
+ const d0=vals[anchor-1], d1=vals[vals.length-1];
+ $('p1').textContent=`${years[anchor-1]} : ${(+d0.toFixed(1)).toLocaleString('fr-FR')} ${C.unit}`;
+ $('p2').textContent=`${years[years.length-1]} : ${(+d1.toFixed(1)).toLocaleString('fr-FR')} ${C.unit}`;
+ $('p3').textContent=(d1>d0?'▲ +':'▼ ')+Math.round((d1-d0)/Math.abs(d0)*100)+' %';
+ $('res').style.display='block';
+ // 3 autres courbes seulement, tirées au sort parmi les 15 restantes
+ const autres=KEYS.filter(k=>k!==key).map(k=>[Math.random(),k]).sort((a,b)=>a[0]-b[0]).slice(0,3).map(p=>p[1]);
+ $('picker').innerHTML='<div style="grid-column:1/-1;font-family:var(--mono);font-size:11px;opacity:.7;margin-top:4px">↻ trois autres courbes, tirées au sort :</div>'+
+  autres.map(k=>`<button class="pick" onclick="pickCurve('${k}');window.scrollTo({top:0,behavior:'smooth'})">${RF_CURVES[k].q.split('(')[0].trim()}<small>${RF_CURVES[k].tag}</small></button>`).join('');
+ $('res').scrollIntoView({behavior:'smooth'});
+};
+$('share').onclick=async()=>{
+ const sc=$('score').textContent;
+ const res=await RF.shareCard((ctx,CW,CH)=>{
+  RF.cardBase(ctx,CW,CH,'GUICHET N°02 — TRACÉ DE MÉMOIRE');
+  ctx.fillStyle='#1B160F';ctx.font='900 40px system-ui';
+  let y=210; const words=C.q.split(' '); let line='';
+  for(const w of words){ const t=line+w+' ';
+   if(ctx.measureText(t).width>930&&line){ctx.fillText(line,70,y);line=w+' ';y+=50}else line=t; }
+  ctx.fillText(line,70,y); y+=70;
+  // mini-graphique : ma courbe vs la réalité
+  const gx=70,gy=y,gw=940,gh=430;
+  ctx.fillStyle='#fff';ctx.strokeStyle='#1B160F';ctx.lineWidth=4;
+  ctx.fillRect(gx,gy,gw,gh);ctx.strokeRect(gx,gy,gw,gh);
+  const cx=x=>gx+24+(x-xmin)/(xmax-xmin)*(gw-48), cy=v=>gy+gh-24-(v-ymin)/(ymax-ymin)*(gh-48);
+  const line2=(arr,col,wd,from)=>{ctx.beginPath();ctx.strokeStyle=col;ctx.lineWidth=wd;let s=false;
+   for(let i=from;i<arr.length;i++){if(arr[i]==null)continue;
+    const px=cx(years[i]),py=cy(arr[i]); s?ctx.lineTo(px,py):(ctx.moveTo(px,py),s=true);}ctx.stroke()};
+  line2(vals,'#1B160F',5,0);
+  line2(user,'#FF4D00',5,anchor-1);
+  ctx.font='700 26px system-ui';ctx.fillStyle='#FF4D00';ctx.fillText('— mon tracé',gx+24,gy+40);
+  ctx.fillStyle='#1B160F';ctx.fillText('— la réalité',gx+220,gy+40);
+  y=gy+gh+80;
+  ctx.font='900 100px system-ui';ctx.fillStyle='#1B160F';ctx.fillText(sc,70,y);
+  ctx.font='26px ui-monospace, monospace';ctx.fillText('de justesse',70,y+42);
+  ctx.font='900 30px system-ui';ctx.fillStyle='#FF4D00';
+  ctx.fillText('Trace la tienne →',70,CH-115);
+ },'trace-rf.png',`« ${C.q} » — j'ai tracé de mémoire, score ${sc}. Essaie : ${location.origin+location.pathname}`);
+ $('share').textContent = res==='shared'?'📮 Partagé !':'📮 Image téléchargée (PNG)';
+};
+$('dl').onclick=()=>RF.downloadCSV('rf-'+key+'.csv',['annee','valeur','unite','source'],
+  C.data.map(d=>[d[0],d[1],C.unit,C.src]));
+pickCurve(KEYS[Math.floor(Math.random()*KEYS.length)]);
+</script><script>RF.mountNav("courbe.html")</script>
+</body></html>

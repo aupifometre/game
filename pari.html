@@ -1,0 +1,455 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guichet 04 — Le Pari Statistique · La République des Faits</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
+<link rel="stylesheet" href="styles.css?v=1787875876">
+<style>
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:8px}
+.kpi{border:2px solid var(--ink);border-radius:8px;padding:11px;cursor:pointer;background:#fff;
+ transition:transform .08s;position:relative}
+.info{position:absolute;top:6px;right:7px;width:21px;height:21px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;
+ text-decoration:none;color:var(--ink);opacity:.35;transition:opacity .12s,background .12s;z-index:2}
+.info:hover{opacity:1;background:#1b160f14}
+.kpi.sel .info{color:var(--paper)}
+.kpi.sel .info:hover{background:#f4efe32e}
+.info.dark{color:var(--paper);opacity:.5}
+.info.dark:hover{opacity:1;background:#f4efe32e}
+.kpi:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.kpi.sel{background:var(--ink);color:var(--paper)}
+.kpi .em{font-size:24px}.kpi b{display:block;font-size:14.5px;margin:5px 0 2px;line-height:1.15}
+.kpi small{font-family:var(--mono);font-size:9.5px;opacity:.7}
+/* la carte tirée au sort */
+.draw{border:3px solid var(--ink);border-radius:10px;background:var(--ink);color:var(--paper);
+ padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden}
+.draw .tag{font-family:var(--mono);font-size:10px;letter-spacing:.18em;opacity:.7}
+.draw .nm{font-weight:900;font-size:23px;text-transform:uppercase;line-height:1.1;margin:6px 0 4px}
+.draw .nm .em{font-size:26px}
+.draw .src{font-family:var(--mono);font-size:11px;opacity:.85}
+.draw .src a{color:#FFB38A}
+.draw.rolling .nm{opacity:.55}
+.redraw{background:none;border:2px solid var(--paper);color:var(--paper);border-radius:7px;
+ font-family:var(--mono);font-size:11px;padding:6px 11px;cursor:pointer;margin-top:10px}
+.redraw:hover{background:var(--paper);color:var(--ink)}
+.q{font-weight:900;font-size:19px;text-transform:none;margin:6px 0 4px;line-height:1.25}
+.qsub{font-family:var(--mono);font-size:12px;line-height:1.65;margin-bottom:14px;
+ background:#fff;border-left:4px solid var(--ink);padding:9px 12px}
+.bets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.bets{grid-template-columns:1fr}}
+.bet{border:2px dashed var(--ink);border-radius:8px;padding:12px;cursor:pointer;background:#fff;text-align:left}
+.bet:hover{border-style:solid}
+.bet.sel{background:var(--orange);color:#fff;border-style:solid}
+.bet b{display:block;font-size:16px;text-transform:uppercase;margin-bottom:3px}
+.bet span{font-family:var(--mono);font-size:11px;line-height:1.5;display:block;opacity:.85}
+#verdict{display:none}
+.chartwrap{position:relative}
+svg{width:100%;height:auto;display:block}
+.dot{opacity:0;transition:opacity .4s}
+.dot.in{opacity:.8}
+.hit{cursor:pointer}
+#tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);
+ border-radius:8px;padding:8px 11px;font-size:13px;line-height:1.45;opacity:0;
+ transition:opacity .12s;z-index:9;white-space:nowrap;box-shadow:3px 3px 0 #00000033}
+#tip.on{opacity:1}
+#tip b{font-size:14px}
+#tip i{font-style:normal;font-family:var(--mono);font-size:11px;opacity:.8;display:block;margin-top:3px}
+.rline{display:flex;align-items:baseline;gap:14px;margin:10px 0;flex-wrap:wrap;padding-right:140px}
+.rbig{font-weight:900;font-size:52px;line-height:1}
+.gauge{margin:26px 0 16px}
+.gbar{position:relative;border:2px solid var(--ink);border-radius:8px}
+.gsegs{display:flex;height:34px;border-radius:6px;overflow:hidden}
+.gseg{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+ font-size:10.5px;font-weight:700;border-right:2px solid var(--ink);text-align:center;line-height:1.1}
+.gseg:last-child{border-right:none}
+.gseg.g0{background:#EFE9DC}.gseg.g1{background:#F7D9C4}.gseg.g2{background:#FFB38A}
+.gmark{position:absolute;top:-9px;bottom:-9px;width:4px;background:var(--ink);border-radius:2px}
+.gmark::after{content:attr(data-l);position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+ font-family:var(--mono);font-size:10px;font-weight:700;white-space:nowrap;background:var(--ink);
+ color:var(--paper);padding:2px 6px;border-radius:4px}
+.gleg{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;opacity:.65;margin-top:9px}
+.badbet{background:#fff;border:2px solid var(--red);color:var(--red);border-radius:8px;padding:10px 12px;
+ font-size:14.5px;margin-bottom:12px}
+.badbet b{font-weight:900}
+.rlab{font-family:var(--mono);font-size:12px}
+.plain{font-size:16px;line-height:1.5;background:#fff;border:2px solid var(--ink);border-radius:8px;
+ padding:12px 14px;margin:4px 0 14px}
+.plain b{color:var(--orange)}
+.score{font-family:var(--mono);font-size:12px;background:#fff;border:2px solid var(--ink);
+ border-radius:8px;padding:6px 10px;display:inline-block;margin-bottom:10px}
+.hint{font-family:var(--mono);font-size:10.5px;opacity:.7;text-align:center;margin-top:6px}
+</style></head><body><div class="wrap">
+
+<div id="rf-load"><div class="box"><b>Ouverture du guichet…</b><ul id="loadlist"></ul></div></div>
+
+<div class="bureau"><b><a href="index.html">RF ★ LA RÉPUBLIQUE DES FAITS</a></b>
+<div class="form-no">GUICHET N°04 — PARIS STATISTIQUES<br>Formulaire PARI-2027</div></div>
+
+<h1>Tes intuitions<br>contre 227 pays.<br><span class="o">Parie.</span></h1>
+<div class="sub">Aucun chiffre de ce site n'est écrit à la main : tout descend des API publiques au moment où tu ouvres la page.</div>
+<div class="provenance" id="prov"></div>
+
+<div class="card"><span class="step-tag">ÉTAPE 01 — CHOISIS CE QUI COMPTE POUR TOI</span>
+<div class="kpis" id="kpis"></div></div>
+
+<div class="card" id="step2" style="display:none"><span class="step-tag">ÉTAPE 02 — TON PRONOSTIC</span>
+<div class="draw" id="draw"><span id="drawinfo"></span>
+  <div class="tag">◈ CARTE TIRÉE AU SORT — CE QU'ON MET EN FACE</div>
+  <div class="nm" id="drawname">—</div>
+  <div class="src" id="drawsrc">—</div>
+  <button class="redraw" id="redraw">↻ tirer une autre carte</button>
+</div>
+<div class="q" id="q">—</div>
+<div class="qsub" id="qsub">—</div>
+<div class="bets" id="bets"></div>
+<button class="go" id="go" disabled>Valider mon pronostic</button></div>
+
+<div class="card" id="verdict"><span class="step-tag">ÉTAPE 03 — VERDICT</span>
+<div class="stamp" id="stamp"></div>
+<div class="score">bonnes réponses : <b id="score">0 / 0</b></div>
+<div class="plain" id="plain"></div>
+<div class="rline"><span class="rbig" id="rv"></span><span class="rlab" id="rl"></span></div>
+<div id="gauge"></div>
+<div class="chartwrap"><div id="chart"></div><div id="tip"></div></div>
+<div class="hint">passe la souris (ou le doigt) sur un point pour voir le pays</div>
+<button class="dlbtn" id="dl">⬇ télécharger les données de ce graphique (CSV)</button>
+<button class="go" id="share">📮 Partager mon résultat</button>
+<button class="go alt" id="replay">↺ Rejouer — nouveau critère, nouvelle carte</button>
+</div>
+
+</div>
+<footer>SOURCES · Banque mondiale (PIB/hab PPA, recettes fiscales, dépenses publiques, commerce,
+mortalité infantile, homicides) · V-Dem via Our World in Data (état de droit, corruption, démocratie) ·
+PNUD (inégalité de genre, années d'école) · OMS (espérance de vie en bonne santé) ·
+Gallup / World Happiness Report · World Inequality Database (part des 1 %) ·
+n varie de 139 à 227 pays selon le croisement · site statique, rien n'est stocké côté serveur ·
+</footer>
+<script src="snapshot.js?v=1787875876"></script><script src="rf-data.js?v=1787875876"></script>
+<script>
+let DATA=null, kpi=null, bet=null, axis=null, lastR=null, lastWin=null, lastN=0, lastPts=[];
+const $=id=>document.getElementById(id);
+const getN=k=>+(localStorage.getItem(k)||0);
+const bump=(k,n)=>localStorage.setItem(k,getN(k)+n);
+const fx=(v,n)=>v.toLocaleString('fr-FR',{minimumFractionDigits:n,maximumFractionDigits:n});
+
+/* CE QUI COMPTE (axe vertical) — toujours orienté « plus haut = mieux » */
+/* pastille de source : discrète, en haut à droite de la tuile */
+const infoDot=(k,src,dark)=>{
+ const u=(RF.SRC[k]||{}).u; if(!u)return '';
+ return `<a class="info${dark?' dark':''}" href="${u}" target="_blank" rel="noopener"
+  title="Source : ${src.replace(/"/g,'')} — ouvrir les données" onclick="event.stopPropagation()">ⓘ</a>`;
+};
+
+const KPIS=[
+ {id:'hale',sk:'hale',em:'🫀',name:'Vivre vieux en bonne santé',short:'l’espérance de vie en bonne santé',
+  src:'OMS · années',k:'hale',get:v=>v.hale,tip:v=>fx(v.hale,1)+' ans en bonne santé'},
+ {id:'happy',sk:'happy',em:'🙂',name:'Être satisfait de sa vie',short:'la satisfaction de vie',
+  src:'Gallup · note sur 10',k:'happy',get:v=>v.happy,tip:v=>fx(v.happy,2)+' / 10 de satisfaction'},
+ {id:'infant',sk:'infant',em:'👶',name:'Survie des nourrissons',short:'la survie des nourrissons',
+  src:'Banque mondiale · mortalité infantile',k:'infant',get:v=>-v.infant,tip:v=>fx(v.infant,1)+' ‰ de mortalité infantile'},
+ {id:'homicide',sk:'homicide',em:'🕊',name:'Vivre en sécurité',short:'la sécurité',
+  src:'Banque mondiale · homicides',k:'homicide',get:v=>-v.homicide,tip:v=>fx(v.homicide,1)+' homicides / 100 000 hab.'},
+ {id:'gii',sk:'gii',em:'♀',name:'Égalité femmes-hommes',short:'l’égalité femmes-hommes',
+  src:'ONU · indice d’inégalité de genre',k:'gii',get:v=>(1-v.gii)*100,tip:v=>fx((1-v.gii)*100,1)+' / 100 d’égalité'},
+ {id:'libdem',sk:'libdem',em:'🗳',name:'Démocratie et libertés',short:'la démocratie',
+  src:'V-Dem · démocratie libérale',k:'libdem',get:v=>v.libdem*100,tip:v=>fx(v.libdem*100,0)+' / 100 de démocratie'},
+ {id:'school',sk:'school',em:'📚',name:'Aller à l’école longtemps',short:'la durée des études',
+  src:'PNUD · années de scolarité',k:'school',get:v=>v.school,tip:v=>fx(v.school,1)+' années d’école en moyenne'},
+];
+
+/* CE QU'ON MET EN FACE (axe horizontal) — tiré au sort */
+const AXES=[
+ {id:'gdp',sk:'gdp',em:'💰',name:'La richesse du pays',k:'gdp',log:true,
+  src:'PIB par habitant, en parité de pouvoir d’achat · Banque mondiale',
+  high:'les plus riches',lo:'pays pauvres',hi:'pays riches',axis:'PIB par habitant',
+  tip:v=>Math.round(v.gdp).toLocaleString('fr-FR')+' $/hab.'},
+ {id:'tax',sk:'tax',em:'🧾',name:'Ce que l’État prélève',k:'tax',
+  src:'Recettes fiscales de l’État central, % du PIB — hors cotisations sociales et collectivités · Banque mondiale',
+  high:'où l’État prélève le plus d’impôts',lo:'impôts faibles',hi:'impôts élevés',axis:'recettes fiscales (% du PIB)',
+  tip:v=>fx(v.tax,1)+' % du PIB en impôts'},
+ {id:'gov',sk:'gov',em:'🏛',name:'Ce que l’État dépense',k:'gov',
+  src:'Dépenses de l’État central, % du PIB — hors collectivités locales · Banque mondiale',
+  high:'où l’État dépense le plus',lo:'État léger',hi:'État lourd',axis:'dépenses de l’État (% du PIB)',
+  tip:v=>fx(v.gov,1)+' % du PIB de dépenses'},
+ {id:'top1',sk:'top1',em:'🎩',name:'Ce que captent les 1 % les plus riches',k:'top1',
+  src:'Part du revenu national avant impôts captée par les 1 % · World Inequality Database',
+  high:'où les 1 % captent la plus grosse part du gâteau',lo:'1 % discrets',hi:'1 % dominants',
+  axis:'part du revenu captée par les 1 %',
+  tip:v=>fx(v.top1,1)+' % du revenu capté par les 1 %'},
+ {id:'rol',sk:'rol',em:'⚖️',name:'La solidité de l’état de droit',k:'rol',
+  src:'Indice d’état de droit · V-Dem (Göteborg)',
+  high:'où l’état de droit est le plus solide',lo:'droit faible',hi:'droit solide',axis:'état de droit (V-Dem)',
+  tip:v=>fx(v.rol,2)+' / 1 d’état de droit'},
+ {id:'corr',sk:'corr',em:'💸',name:'La corruption politique',k:'corr',
+  src:'Indice de corruption politique · V-Dem (Göteborg)',
+  high:'les plus corrompus',lo:'peu corrompus',hi:'très corrompus',axis:'corruption politique (V-Dem)',
+  tip:v=>fx(v.corr,2)+' / 1 de corruption'},
+ {id:'trade',sk:'trade',em:'🚢',name:'L’ouverture au commerce mondial',k:'trade',log:true,
+  src:'Commerce extérieur en % du PIB · Banque mondiale',
+  high:'les plus ouverts au commerce mondial',lo:'économie fermée',hi:'économie ouverte',
+  axis:'commerce extérieur (% du PIB)',
+  tip:v=>fx(v.trade,0)+' % du PIB de commerce extérieur'},
+];
+
+const BETS=[
+ {id:'non', label:'Aucun lien',      hint:'ça ne change à peu près rien',                  test:r=>Math.abs(r)<0.25},
+ {id:'peu', label:'Un peu',          hint:'ça joue, mais avec beaucoup d’exceptions',      test:r=>r>=0.25&&r<0.6},
+ {id:'fort',label:'Beaucoup',        hint:'ceux du haut sont presque tous devant',         test:r=>r>=0.6},
+ {id:'inv', label:'C’est l’inverse', hint:'ceux du haut font plutôt moins bien',           test:r=>r<=-0.25},
+];
+
+// 3 critères sur 7, tirés au sort à chaque visite
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);
+const forced=new URLSearchParams(location.search).get('y');
+let SHOWN=shuffle(KPIS).slice(0,3);
+if(forced&&!SHOWN.some(k=>k.id===forced)){const f=KPIS.find(k=>k.id===forced); if(f)SHOWN[0]=f;}
+
+const ul=$('loadlist');
+RF.load((key,ok,label)=>{const li=document.createElement('li');li.textContent=label;li.className=ok?'ok':'ko';ul.appendChild(li);})
+.then(d=>{
+  DATA=d;
+  $('prov').textContent = d.meta.source==='live' ? `● ${d.world.length} pays chargés en direct le ${d.meta.date}`
+    : d.meta.source==='snapshot' ? `● API indisponibles — snapshot du ${d.meta.date}` : `● ${d.meta.source||'cache'}`;
+  setTimeout(()=>$('rf-load').classList.add('done'),400);
+  init();
+});
+
+function init(){
+ refreshScore();
+ SHOWN.forEach(k=>{
+  const d=document.createElement('div');d.className='kpi';
+  d.innerHTML=`${infoDot(k.k,k.src)}<span class="em">${k.em}</span><b>${k.name}</b><small>${k.src}</small>`;
+  d.onclick=e=>{if(e.target.tagName==='A')return;
+   kpi=k;[...$('kpis').children].forEach(x=>x.classList.remove('sel'));d.classList.add('sel');
+   $('step2').style.display='block';question();chk();
+   setTimeout(()=>$('step2').scrollIntoView({behavior:'smooth',block:'nearest'}),80);};
+  $('kpis').appendChild(d);});
+ BETS.forEach(b=>{
+  const d=document.createElement('div');d.className='bet';
+  d.innerHTML=`<b>${b.label}</b><span>${b.hint}</span>`;
+  d.onclick=()=>{bet=b;[...$('bets').children].forEach(x=>x.classList.remove('sel'));d.classList.add('sel');chk()};
+  $('bets').appendChild(d);});
+ $('redraw').onclick=()=>drawAxis(true);
+ const q=new URLSearchParams(location.search);
+ const ki=SHOWN.findIndex(k=>k.id===q.get('y')), ai=AXES.findIndex(a=>a.id===q.get('x')), bi=BETS.findIndex(b=>b.id===q.get('bet'));
+ if(ki>=0&&ai>=0&&bi>=0){ $('kpis').children[ki].click(); setAxis(AXES[ai]); $('bets').children[bi].click(); $('go').click(); }
+ else drawAxis(false);
+}
+function chk(){$('go').disabled=!(kpi&&bet&&axis)}
+function refreshScore(){$('score').textContent=`${getN('rf-good')} / ${getN('rf-total')}`}
+
+function setAxis(a){axis=a;
+ $('drawname').innerHTML=`<span class="em">${a.em}</span> ${a.name}`;
+ $('drawsrc').textContent=a.src;
+ $('drawinfo').innerHTML=infoDot(a.k,a.src,1);question();chk();}
+function drawAxis(anim){
+ const pool=AXES.filter(a=>!axis||a.id!==axis.id);
+ const pick=pool[Math.floor(Math.random()*pool.length)];
+ if(!anim){setAxis(pick);return}
+ $('draw').classList.add('rolling');let i=0;
+ const t=setInterval(()=>{const a=AXES[i++%AXES.length];
+  $('drawname').innerHTML=`<span class="em">${a.em}</span> ${a.name}`;},70);
+ setTimeout(()=>{clearInterval(t);$('draw').classList.remove('rolling');setAxis(pick);},560);
+}
+function question(){
+ if(!axis){return}
+ const c=kpi?kpi.short:'ce critère';
+ $('q').textContent=`Dans les pays ${axis.high}, ${c} est-${c.startsWith('l’')||c.startsWith('la ')?'elle':'il'} meilleure ?`;
+ $('qsub').innerHTML=`On range les pays du plus bas au plus haut sur <b>${axis.axis}</b>, et on regarde si <b>${c}</b> suit. Pas besoin d'être statisticien : réponds à l'instinct.`;
+}
+
+$('go').onclick=()=>{reveal();$('verdict').scrollIntoView({behavior:'smooth'})};
+$('replay').onclick=()=>{
+ kpi=bet=null;[...$('bets').children].forEach(x=>x.classList.remove('sel'));
+ SHOWN=shuffle(KPIS).slice(0,3);
+ $('kpis').innerHTML='';
+ SHOWN.forEach(k=>{
+  const d=document.createElement('div');d.className='kpi';
+  d.innerHTML=`${infoDot(k.k,k.src)}<span class="em">${k.em}</span><b>${k.name}</b><small>${k.src}</small>`;
+  d.onclick=e=>{if(e.target.tagName==='A')return;
+   kpi=k;[...$('kpis').children].forEach(x=>x.classList.remove('sel'));d.classList.add('sel');
+   $('step2').style.display='block';question();chk();};
+  $('kpis').appendChild(d);});
+ $('step2').style.display='none';$('verdict').style.display='none';
+ drawAxis(false);chk();window.scrollTo({top:0,behavior:'smooth'});};
+
+function plainText(r,critShort,axeHigh){
+ const a=Math.abs(r), neg=r<0;
+ if(a<0.25) return `<b>Aucun lien net.</b> Savoir si un pays est parmi ${axeHigh} ne dit presque rien sur ${critShort} : on en trouve de tous les niveaux, partout sur le graphique.`;
+ if(a<0.6)  return neg ? `<b>Un lien inverse, mais modéré.</b> Les pays ${axeHigh} font plutôt moins bien sur ${critShort} — avec beaucoup d'exceptions.`
+                       : `<b>Un lien réel mais modéré.</b> Les pays ${axeHigh} font en moyenne mieux sur ${critShort} — mais les exceptions sont nombreuses.`;
+ if(a<0.8)  return neg ? `<b>Un lien inverse et fort.</b> Les pays ${axeHigh} sont nettement en retrait sur ${critShort}. Les contre-exemples sont rares.`
+                       : `<b>Un lien fort.</b> Les pays ${axeHigh} sont presque tous devant sur ${critShort}. Les contre-exemples existent, mais ils sont rares.`;
+ return neg ? `<b>Un lien inverse, très serré.</b> ${cap(critShort)} recule presque mécaniquement à mesure qu'on monte.`
+            : `<b>Un lien très serré.</b> ${cap(critShort)} suit de très près : connaître l'un permet de deviner l'autre.`;
+}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+function reveal(){
+ $('verdict').style.display='block';
+ const raw=[];
+ DATA.world.forEach(c=>{
+  const v=c.v; if(v[axis.k]==null||v[kpi.k]==null)return;
+  let x=v[axis.k]; if(axis.log){ if(x<=0)return; x=Math.log10(x); }
+  raw.push({c,x,y:kpi.get(v)});
+ });
+ const r=RF.pearson(raw.map(p=>[p.x,p.y]));
+ lastR=r;lastN=raw.length;lastPts=raw;
+ const win=bet.test(r); lastWin=win;
+ bump('rf-total',1); if(win)bump('rf-good',1); refreshScore();
+ const st=$('stamp');st.className='stamp '+(win?'win':'lose');
+ st.textContent=win?'BIEN VU ✓':'RATÉ ✗';
+ st.classList.remove('show');setTimeout(()=>st.classList.add('show'),700);
+ $('plain').innerHTML=plainText(r,kpi.short,axis.high);
+ const pct=Math.round(r*r*100);
+ $('rv').innerHTML=`${pct} %`;
+ $('rl').innerHTML=`des écarts entre pays vont de pair avec <b>${axis.name.toLowerCase()}</b>${r<0?' — <b>en sens inverse</b>':''}<br>
+  <span style="opacity:.6">${raw.length} pays comparés · coefficient de détermination r² = ${(r*r).toFixed(2).replace('.',',')} · r = ${r.toFixed(2).replace('.',',')}</span>`;
+ drawGauge(r,pct,win);
+ drawChart(raw);
+}
+
+/* la jauge : où tombe le résultat, et où était ton pronostic */
+function drawGauge(r,pct,win){
+ const neg=r<0;
+ const zones=[[0,6,'AUCUN LIEN','g0'],[6,36,'UN PEU','g1'],[36,100,'BEAUCOUP','g2']];
+ const pos=Math.min(99.5,Math.max(.5,pct));
+ const good=BETS.find(b=>b.test(r));
+ $('gauge').innerHTML=`<div class="gauge">
+  <div class="gbar"><div class="gsegs">${zones.map(z=>`<div class="gseg ${z[3]}" style="flex:${z[1]-z[0]}">${z[2]}</div>`).join('')}</div>
+   <div class="gmark" style="left:calc(${pos}% - 2px)" data-l="${pct} %"></div></div>
+  <div class="gleg"><span>0 % — aucun rapport</span><span>${neg?'sens inverse ↓':''}</span><span>100 % — lien parfait</span></div>
+ </div>` + (win?'':`<div class="badbet">Tu as répondu <b>« ${bet.label} »</b>. La bonne réponse était <b>« ${good?good.label:'—'} »</b>${neg&&good&&good.id!=='inv'?" (et le lien va dans le sens inverse)":''}.</div>`);
+}
+
+const REGION=(()=>{try{return new Intl.DisplayNames(['fr'],{type:'region'})}catch(e){return null}})();
+function countryName(c){
+ if(c.iso==='FRA')return 'France';
+ if(REGION&&c.iso2){try{const n=REGION.of(c.iso2);if(n&&n!==c.iso2)return n}catch(e){}}
+ return c.name||c.iso;
+}
+
+function drawChart(raw){
+ const W=680,H=430,P=48;
+ const xv=raw.map(p=>p.x),yv=raw.map(p=>p.y);
+ const xmin=Math.min(...xv),xmax=Math.max(...xv),ymin=Math.min(...yv),ymax=Math.max(...yv);
+ const X=x=>P+(x-xmin)/(xmax-xmin)*(W-2*P), Y=y=>H-P-(y-ymin)/(ymax-ymin)*(H-2*P);
+ const n=raw.length,mx=xv.reduce((a,b)=>a+b)/n,my=yv.reduce((a,b)=>a+b)/n;
+ let num=0,den=0;raw.forEach(p=>{num+=(p.x-mx)*(p.y-my);den+=(p.x-mx)**2});
+ const b1=num/den,b0=my-b1*mx;
+
+ const byY=[...raw].sort((a,b)=>b.y-a.y);
+ const picks=[];
+ const add=(p,role)=>{if(p&&!picks.some(q=>q.p.c.iso===p.c.iso))picks.push({p,role})};
+ add(raw.find(p=>p.c.iso==='FRA'),'fr');
+ add(raw.find(p=>p.c.iso==='CHE'),'ref');
+ add(byY[0],'champion'); add(byY[byY.length-1],'bas'); add(byY[byY.length-2],'bas');
+
+ let dots='',hits='',labels='';
+ raw.forEach((p,i)=>{
+  const hit=picks.some(q=>q.p.c.iso===p.c.iso), fr=p.c.iso==='FRA';
+  const cx=X(p.x).toFixed(1), cy=Y(p.y).toFixed(1);
+  dots+=`<circle class="dot" style="transition-delay:${i*3}ms" cx="${cx}" cy="${cy}" r="${fr?8:hit?6:4}"
+   fill="${fr?'#FF4D00':'#1B160F'}"${hit?' stroke="#F4EFE3" stroke-width="2"':''}/>`;
+  hits+=`<circle class="hit" cx="${cx}" cy="${cy}" r="10" fill="transparent" data-i="${i}"/>`;
+ });
+ const placed=picks.map(({p,role})=>{
+  const px=X(p.x),py=Y(p.y),right=px>W*0.66;
+  return {p,role,px,py,right,tx:right?px-13:px+13,ty:py<P+18?py+19:py-11};
+ }).sort((a,b)=>a.ty-b.ty);
+ for(let i=1;i<placed.length;i++){
+  const gap=placed[i].ty-placed[i-1].ty;
+  if(Math.abs(placed[i].px-placed[i-1].px)<170&&gap<17)placed[i].ty=placed[i-1].ty+17;
+ }
+ placed.forEach(({p,role,tx,ty,right})=>{
+  const fr=role==='fr';
+  labels+=`<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${right?'end':'start'}" font-size="${fr?15:13}"
+   font-family="system-ui,sans-serif" font-weight="${fr?'800':'600'}" fill="${fr?'#FF4D00':'#1B160F'}"
+   stroke="#fff" stroke-width="3.5" paint-order="stroke">${RF.flag(p.c.iso2)||''} ${countryName(p.c)}</text>`;
+ });
+ const trend=`<line x1="${X(xmin)}" y1="${Y(b0+b1*xmin)}" x2="${X(xmax)}" y2="${Y(b0+b1*xmax)}" stroke="#FF4D00" stroke-width="2.5" stroke-dasharray="7 5"/>`;
+ $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" id="svg">
+  <rect width="${W}" height="${H}" fill="#fff" stroke="#1B160F" stroke-width="2" rx="8"/>
+  <text x="${W/2}" y="${H-13}" text-anchor="middle" font-size="12" font-family="ui-monospace,monospace">${axis.lo}  ←  ${axis.axis}  →  ${axis.hi}</text>
+  <text x="17" y="${H/2}" font-size="12" font-family="ui-monospace,monospace" transform="rotate(-90 17 ${H/2})" text-anchor="middle">${kpi.name} →</text>
+  ${trend}${dots}${hits}${labels}</svg>`;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>[...document.querySelectorAll('.dot')].forEach(d=>d.classList.add('in'))));
+
+ // survol : nom du pays + les deux valeurs
+ const tip=$('tip'), wrap=document.querySelector('.chartwrap'), svg=$('svg');
+ const show=e=>{
+  const p=raw[+e.target.dataset.i]; if(!p)return;
+  tip.innerHTML=`<b>${RF.flag(p.c.iso2)||''} ${countryName(p.c)}</b>
+   <i>${kpi.tip(p.c.v)}</i><i>${axis.tip(p.c.v)}</i>`;
+  const r0=svg.getBoundingClientRect(), rw=wrap.getBoundingClientRect(), sc=r0.width/W;
+  const px=(r0.left-rw.left)+X(p.x)*sc, py=(r0.top-rw.top)+Y(p.y)*sc;
+  tip.classList.add('on');
+  const tw=tip.offsetWidth, th=tip.offsetHeight;
+  tip.style.left=Math.max(2,Math.min(rw.width-tw-2,px-tw/2))+'px';
+  tip.style.top=(py-th-12<0?py+14:py-th-12)+'px';
+ };
+ svg.querySelectorAll('.hit').forEach(h=>{
+  h.addEventListener('mouseenter',show);
+  h.addEventListener('touchstart',e=>{show({target:h});e.preventDefault()},{passive:false});
+ });
+ svg.addEventListener('mouseleave',()=>tip.classList.remove('on'));
+}
+
+$('dl').onclick=()=>{
+ const su=k=>(RF.SRC[k]||{}).u||'';
+ RF.downloadCSV(`republique-des-faits_${kpi.id}_x_${axis.id}.csv`,
+  ['code_iso3','pays',axis.axis,kpi.name,'source_axe','source_critere'],
+  lastPts.map(p=>[p.c.iso,countryName(p.c),p.c.v[axis.k],p.c.v[kpi.k],su(axis.k),su(kpi.k)]));
+};
+$('share').onclick=async()=>{
+ const won=lastWin,r=lastR,k=kpi,a=axis,b=bet,pts=lastPts;
+ const pct=Math.round(r*r*100);
+ const good=BETS.find(x=>x.test(r));
+ const res=await RF.shareCard((ctx,W,H)=>{
+  RF.cardBase(ctx,W,H,'GUICHET N°04 — MON PRONOSTIC');
+  ctx.fillStyle='#1B160F';ctx.font='900 40px system-ui';
+  let y=225,line='';
+  for(const w of `Dans les pays ${a.high}, ${k.short} est-elle meilleure ?`.split(' ')){
+   const t=line+w+' ';
+   if(ctx.measureText(t).width>930&&line){ctx.fillText(line,70,y);line=w+' ';y+=50}else line=t;}
+  ctx.fillText(line,70,y); y+=52;
+  ctx.font='30px system-ui';ctx.fillStyle=won?'#1F9D5B':'#D92D20';
+  ctx.fillText(`Ma réponse : ${b.label}${won?'  ✓':'  ✗'}`,70,y);
+  if(!won&&good){ctx.fillStyle='#1B160F';ctx.font='700 30px system-ui';
+   ctx.fillText(`La bonne réponse : ${good.label}`,70,y+42); y+=42;}
+  y+=40;
+  // --- le nuage de points ---
+  const gx=70,gy=y,gw=940,gh=420;
+  ctx.fillStyle='#fff';ctx.strokeStyle='#1B160F';ctx.lineWidth=4;
+  ctx.fillRect(gx,gy,gw,gh);ctx.strokeRect(gx,gy,gw,gh);
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const CX=v=>gx+34+(v-x0)/(x1-x0)*(gw-68), CY=v=>gy+gh-34-(v-y0)/(y1-y0)*(gh-68);
+  const n=pts.length,mx=xs.reduce((p,q)=>p+q)/n,my=ys.reduce((p,q)=>p+q)/n;
+  let nu=0,de=0;pts.forEach(p=>{nu+=(p.x-mx)*(p.y-my);de+=(p.x-mx)**2});
+  const b1=nu/de,b0=my-b1*mx;
+  ctx.setLineDash([12,9]);ctx.strokeStyle='#FF4D00';ctx.lineWidth=5;
+  ctx.beginPath();ctx.moveTo(CX(x0),CY(b0+b1*x0));ctx.lineTo(CX(x1),CY(b0+b1*x1));ctx.stroke();
+  ctx.setLineDash([]);
+  pts.forEach(p=>{const fr=p.c.iso==='FRA';
+   ctx.beginPath();ctx.fillStyle=fr?'#FF4D00':'#1B160F55';
+   ctx.arc(CX(p.x),CY(p.y),fr?13:6,0,7);ctx.fill();});
+  const fp=pts.find(p=>p.c.iso==='FRA');
+  if(fp){ctx.fillStyle='#FF4D00';ctx.font='900 30px system-ui';
+   const lx=CX(fp.x)>gx+gw*0.7;ctx.textAlign=lx?'right':'left';
+   ctx.fillText('France',CX(fp.x)+(lx?-22:22),CY(fp.y)+10);ctx.textAlign='left';}
+  ctx.fillStyle='#1B160F';ctx.font='22px ui-monospace, monospace';
+  ctx.fillText(`${a.lo}  →  ${a.hi}`,gx+34,gy+gh-8);
+  y=gy+gh+95;
+  ctx.font='900 116px system-ui';ctx.fillStyle='#1B160F';ctx.fillText(pct+' %',70,y);
+  ctx.font='26px ui-monospace, monospace';
+  const w1=ctx.measureText(pct+' %').width;
+  ctx.fillText(`des écarts entre pays vont avec ${a.name.toLowerCase()}`,70,y+44);
+  ctx.fillText(`${pts.length} pays · r = ${r.toFixed(2).replace('.',',')}${r<0?' (sens inverse)':''}`,70,y+80);
+  ctx.font='900 32px system-ui';ctx.fillStyle='#FF4D00';
+  ctx.fillText('À ton tour — même question, même carte →',70,H-112);
+ },'pronostic-rf.png',
+ `Dans les pays ${a.high}, ${k.short} est-elle meilleure ? J'ai répondu « ${b.label} » — ${won?'BIEN VU ✓':'RATÉ ✗ (bonne réponse : '+(good?good.label:'—')+')'}. ${pct} % des écarts entre pays vont avec ${a.name.toLowerCase()}. À ton tour : ${location.origin+location.pathname}?y=${k.id}&x=${a.id}&bet=${b.id}`);
+ $('share').textContent = res==='shared' ? '📮 Partagé !' : '📮 Image téléchargée (PNG)';
+};
+</script><script>RF.mountNav("pari.html")</script>
+</body></html>
