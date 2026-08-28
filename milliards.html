@@ -1,8 +1,8 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cadran 09 — La chaîne des milliards · Au pifomètre</title>
-<link rel="icon" href="favicon.svg?v=1787878178">
-<link rel="stylesheet" href="styles.css?v=1787878178">
+<title>La chaîne des milliards · Au pifomètre</title>
+<link rel="icon" href="favicon.svg?v=1787878867">
+<link rel="stylesheet" href="styles.css?v=1787878867">
 <style>
 .mes{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin-top:8px}
 .m{border:2px solid var(--ink);border-radius:8px;background:#fff;padding:11px;cursor:pointer;transition:transform .08s}
@@ -28,10 +28,12 @@ input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
 .lockbox b{font-size:14.5px;display:block}
 .lockbox small{display:block;font-family:var(--mono);font-size:10.5px;line-height:1.55;opacity:.75;margin-top:4px}
 .cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin:10px 0 4px}
-.cat{display:flex;gap:9px;align-items:flex-start;border:2px solid var(--ink);border-radius:8px;
- background:#fff;padding:9px 10px;cursor:pointer;font-size:13px}
+.cat{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--ink);border-radius:8px;
+ background:#fff;padding:10px 11px;cursor:pointer;font-size:13px;text-align:left;font-family:inherit;
+ color:inherit;transition:transform .08s}
+.cat:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
 .cat.on{background:var(--ink);color:var(--paper)}
-.cat input{margin-top:2px;accent-color:var(--orange);flex:0 0 16px;width:16px;height:16px}
+.cem{font-size:22px;line-height:1}
 .cat b{display:block;font-size:13.5px;line-height:1.2}
 .cat small{display:block;font-family:var(--mono);font-size:9.5px;opacity:.72;margin-top:3px;line-height:1.4}
 .flow{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:4px 14px;margin:14px 0}
@@ -56,7 +58,7 @@ input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
 </style></head><body><div class="wrap">
 
 <div class="bureau"><b><a href="index.html">AU PIFOMÈTRE</a></b>
-<div class="form-no">CADRAN N°09 — LA CONVERSION<br>aiguille calibrée sur 5 mesures</div></div>
+<div class="form-no">LA CONVERSION<br>aiguille calibrée sur 5 mesures</div></div>
 
 <h1>Un milliard,<br>ça fait combien<br><span class="o">sur une fiche de paie ?</span></h1>
 <div class="sub">On annonce des mesures en milliards. Personne ne vit en milliards. Ici, on déroule la chaîne jusqu'au bout — et elle s'applique aux mesures de tous les bords, sans exception.</div>
@@ -75,8 +77,8 @@ input[type=range]{width:100%;margin-top:8px;accent-color:var(--orange)}
 restent celles d'aujourd'hui — les trois réglages ci-dessous sont donc figés. Coche pour supposer une réallocation
 et les débloquer.</small></span></label>
 
-<div class="step locked" id="lk1"><div class="sh"><b>Part réellement fléchée vers les salaires visés</b><span class="v" id="v2">8,9 %</span></div>
-<div class="src">8,9 % = ce que l'enseignement pèse dans le budget actuel (89 € sur 1 000 € de dépense publique, FIPECO/INSEE). Si rien ne change dans la répartition, l'argent nouveau se répartit comme le reste. Monte à 100 % si tu supposes un fléchage intégral.</div>
+<div class="step locked" id="lk1"><div class="sh"><b>Part du budget qui revient à ce profil</b><span class="v" id="v2">8,9 %</span></div>
+<div class="src">Calculée automatiquement d'après le profil choisi plus bas : part de la dépense publique consacrée à ce poste (clé FIPECO/INSEE — 89 € sur 1 000 € pour l'enseignement, 259 € pour les retraites…), multipliée par la fraction qui arrive vraiment en revenu aux personnes. Si rien ne change dans la répartition, l'argent nouveau suit le même chemin que le reste. Débloque pour supposer un fléchage intégral.</div>
 <input type="range" id="s2" min="1" max="100" value="9"></div>
 
 <div class="step locked" id="lk2"><div class="sh"><b>Charges patronales que l'État se paie à lui-même</b><span class="v" id="v3">85 %</span></div>
@@ -87,13 +89,13 @@ et les débloquer.</small></span></label>
 <div class="src">Cotisations salariales puis IR effectif moyen. Ce qui reste, c'est ce qui arrive sur le compte en banque.</div>
 <input type="range" id="s4" min="0" max="45" value="22"></div>
 
-<div class="step"><div class="sh"><b>Qui en bénéficie</b><span class="v" id="v5">857 000</span></div>
-<div class="src">Coche les corps concernés. Chaque case ajoute ses effectifs <b>et</b> la part de dépense publique
-correspondante — dont seule une fraction part en rémunérations (le reste finance les bâtiments, le matériel,
-les prestations). Le curseur se limite au total coché.</div>
+<div class="step"><div class="sh"><b>Pour qui ?</b><span class="v" id="v5">857 000</span></div>
+<div class="src">Si l'État garde sa répartition actuelle, tu ne choisis pas qui touche l'argent : il coule
+là où le budget coule déjà. Ce bouton ne redistribue rien — il montre ce que la mesure donne <b>vu depuis
+un profil</b>. Chacun porte sa propre part de budget et sa propre cascade de prélèvements.</div>
 <div class="cats" id="cats"></div>
-<input type="range" id="s5" min="50000" max="857000" step="1000" value="857000">
 <div class="src" id="catcalc"></div></div>
+</div>
 </div>
 
 <div class="card"><span class="step-tag">ÉTAPE 03 — LA CHAÎNE</span>
@@ -111,62 +113,63 @@ Charges employeur État : CAS Pensions. Effectifs : DEPP (enseignants), DREES (h
 Les rendements annoncés sont ceux de leurs promoteurs — c'est le point de départ, pas une validation.
 </footer>
 
-<script src="rf-data.js?v=1787878225"></script>
+<script src="rf-data.js?v=1787878867"></script>
 <script>
 const $=id=>document.getElementById(id);
 const eur=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:0});
-const md=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:1});
+const md=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:n<1?2:1});
 const MES=[
  {id:'zucman',t:'rec',n:'Taxe Zucman',md:20,d:'2 % sur les patrimoines > 100 M€',
-  s:'Rendement annoncé par ses promoteurs : 20 Md€. Les estimations basses tournent autour de 5 Md€.',el:54},
+  s:"Rendement annoncé par ses promoteurs : 20 Md€. Les estimations basses tournent autour de 5 Md€.",el:54},
+ {id:'superprofits',t:'rec',n:'Taxer les superprofits',md:12,d:'contribution exceptionnelle sur les grandes marges',
+  s:"Les chiffrages publics vont de 10 à 20 Md€ selon le périmètre retenu et l'année de référence. On part du milieu.",el:45},
+ {id:'isf',t:'rec',n:"Rétablir l'ISF",md:4,d:'retour à l\'impôt de solidarité sur la fortune',
+  s:"L'ISF a rapporté environ 4 Md€ lors de sa dernière année pleine (2017), avant son remplacement par l'IFI.",el:50},
  {id:'fraude',t:'rec',n:'Récupérer la fraude fiscale',md:100,d:'estimation haute du manque à gagner',
-  s:'100 Md€ = écart théorique estimé (Solidaires Finances Publiques). Le recouvrement réel constaté est de 11 à 16 Md€/an — mets le curseur d\'évaporation à ~85 % pour retrouver ce chiffre.',el:85},
+  s:"100 Md€ = écart théorique estimé (Solidaires Finances Publiques). Le recouvrement réel constaté est de 11 à 16 Md€/an — mets le curseur d'évaporation à ~85 % pour retrouver ce chiffre.",el:85},
  {id:'niches',t:'rec',n:'Supprimer les niches fiscales',md:10,d:'coup de rabot sur les dépenses fiscales',
-  s:'Ordre de grandeur d\'un rabot ambitieux sur les 88 Md€ de dépenses fiscales recensées par le Sénat.',el:30},
- {id:'defense',t:'dep',n:'Couper 10 % du budget Défense',md:5,d:'redéploiement d\'une dépense existante',
-  s:'Une baisse de dépense n\'a pas de réponse comportementale des contribuables : curseur d\'évaporation à 0 %.',el:0},
- {id:'cotis',t:'dep',n:'Supprimer 10 % des allègements de cotisations',md:7.5,d:'sur les 75 Md€ d\'allègements bas salaires',
-  s:'Attention : ces allègements portent sur les bas salaires. L\'effet emploi n\'est pas dans cette machine — elle ne calcule que le trajet de l\'argent.',el:20},
+  s:"Ordre de grandeur d'un rabot ambitieux sur les 88 Md€ de dépenses fiscales recensées par le Sénat.",el:30},
+ {id:'elus',t:'dep',n:'Baisser de 50 % les indemnités des élus',md:0.65,d:'députés, sénateurs et élus locaux',
+  s:"⚠ Estimation : l'ensemble des indemnités d'élus en France représente de l'ordre de 1,3 Md€ par an — la grande majorité des ~500 000 élus locaux sont bénévoles ou très faiblement indemnisés. En diviser la moitié donne ~0,65 Md€. Aucune réponse comportementale : curseur d'évaporation à 0 %.",el:0},
+ {id:'ame',t:'dep',n:"Supprimer l'aide médicale d'État",md:1.2,d:'soins des étrangers en situation irrégulière',
+  s:"Budget de l'AME : environ 1,2 Md€ par an. Cette machine ne calcule que le trajet de l'argent — les effets sanitaires et les reports vers l'hôpital d'urgence n'y sont pas.",el:0},
+ {id:'defense',t:'dep',n:'Couper 10 % du budget Défense',md:5,d:"redéploiement d'une dépense existante",
+  s:"Une baisse de dépense n'a pas de réponse comportementale des contribuables : curseur d'évaporation à 0 %.",el:0},
+ {id:'postes',t:'dep',n:'Supprimer 200 000 postes de fonctionnaires',md:10,d:'sur les 5,7 millions d\'agents publics',
+  s:"À un coût employeur moyen d'environ 50 000 € par agent, 200 000 postes représentent ~10 Md€. Le chiffre suppose des départs non remplacés étalés dans le temps.",el:15},
+ {id:'cotis',t:'dep',n:'Supprimer 10 % des allègements de cotisations',md:7.5,d:"sur les 75 Md€ d'allègements bas salaires",
+  s:"Attention : ces allègements portent sur les bas salaires. L'effet emploi n'est pas dans cette machine — elle ne calcule que le trajet de l'argent.",el:20},
 ];
 let cur=MES[0];
-/* Effectifs : rapport annuel sur l'état de la fonction publique (DGAFP) et DEPP.
-   Part du budget : FIPECO/INSEE par fonction. Part salaires : ESTIMATION assumée —
-   aucun budget ministériel ne part à 100 % en rémunérations. */
-const CATS=[
- {id:'ens', n:'Enseignants',                 eff:857000,  bud:8.9,  sal:0.75,
-  s:"Éducation nationale · 8,9 % de la dépense publique, dont ~75 % de rémunérations (est.)"},
- {id:'ter', n:'Fonction publique territoriale', eff:1900000, bud:11.0, sal:0.50,
-  s:"Communes, départements, régions · ~11 % de la dépense (est.), dont ~50 % de rémunérations (est.)"},
- {id:'hop', n:'Fonction publique hospitalière', eff:1200000, bud:20.6, sal:0.20,
-  s:"Santé · 20,6 % de la dépense, mais l'essentiel finance les soins de ville et les médicaments : ~20 % de masse salariale hospitalière (est.)"},
- {id:'aut', n:'Autres fonctionnaires (armée incluse)', eff:1750000, bud:12.0, sal:0.45,
-  s:"Défense, police, justice, administration · ~12 % de la dépense (est.), dont ~45 % de rémunérations (est.)"},
+/* Un profil, pas une addition. Si l'État ne change pas sa répartition, on ne choisit
+   pas qui touche l'argent : on regarde ce que ça donne pour tel ou tel bénéficiaire.
+   Part du budget : FIPECO/INSEE par fonction. Part qui arrive en revenu : ESTIMATION
+   assumée — aucun budget ne part à 100 % en versements aux personnes. */
+const PROFILS=[
+ {id:'ens', em:'👩‍🏫', low:'un enseignant', n:'Un enseignant', eff:857000, bud:8.9, sal:0.75, type:'salaire',
+  s:"857 000 enseignants · l'enseignement pèse 8,9 % de la dépense publique, dont ~75 % de rémunérations (est.)"},
+ {id:'soi', em:'🩺', low:'un soignant hospitalier', n:'Un soignant hospitalier', eff:1200000, bud:20.6, sal:0.20, type:'salaire',
+  s:"1,2 M d'agents hospitaliers · la santé pèse 20,6 % de la dépense, mais l'essentiel finance les soins de ville et les médicaments : ~20 % de masse salariale hospitalière (est.)"},
+ {id:'ret', em:'👵', low:'un retraité', n:'Un retraité', eff:17000000, bud:25.9, sal:1.00, type:'pension',
+  s:"17 M de retraités · les retraites sont le premier poste public : 25,9 % de la dépense, versée intégralement en pensions"},
+ {id:'rsa', em:'🧾', low:'un allocataire du RSA', n:'Un allocataire du RSA', eff:1900000, bud:0.9, sal:1.00, type:'presta',
+  s:"1,9 M de foyers · le RSA représente environ 0,9 % de la dépense publique, versé intégralement et non imposable"},
+ {id:'tou', em:'🙋', low:'chaque habitant', n:'Chaque habitant', eff:68400000, bud:100, sal:1.00, type:'tete',
+  s:"68,4 M d'habitants · la vue la plus brute : on divise par la population, sans rien flécher"},
 ];
-let picked={ens:true,ter:false,hop:false,aut:false};
+let profil=PROFILS[0];
 function renderCats(){
  $('cats').innerHTML='';
- CATS.forEach(c=>{
-  const d=document.createElement('label');d.className='cat'+(picked[c.id]?' on':'');
-  d.innerHTML=`<input type="checkbox" ${picked[c.id]?'checked':''}><span><b>${c.n}</b>
-   <small>${c.eff.toLocaleString('fr-FR')} agents · ${c.s}</small></span>`;
-  d.querySelector('input').onchange=e=>{
-   picked[c.id]=e.target.checked;
-   if(!Object.values(picked).some(Boolean)){picked[c.id]=true;e.target.checked=true;return}
-   renderCats();syncCats();calc();};
+ PROFILS.forEach(p=>{
+  const d=document.createElement('button');d.className='cat'+(p.id===profil.id?' on':'');
+  d.type='button';
+  d.innerHTML=`<span class="cem">${p.em}</span><span><b>${p.n}</b><small>${p.s}</small></span>`;
+  d.onclick=()=>{profil=p;renderCats();syncCats();calc()};
   $('cats').appendChild(d);});
 }
-function catTotals(){
- let eff=0,part=0;
- CATS.forEach(c=>{ if(!picked[c.id])return; eff+=c.eff; part+=c.bud*c.sal; });
- return {eff,part};
-}
 function syncCats(){
- const t=catTotals();
- const sl=$('s5'); sl.max=t.eff; sl.min=Math.min(50000,t.eff);
- if(+sl.value>t.eff||autoEff) sl.value=t.eff;
- if(!$('unlock').checked) $('s2').value=Math.max(1,Math.round(t.part));
+ if(!$('unlock').checked) $('s2').value=Math.max(1,Math.round(profil.bud*profil.sal));
 }
-let autoEff=true;
 function renderMes(f){
  $('mes').innerHTML='';
  MES.filter(m=>f==='all'||m.t===f).forEach(m=>{
@@ -180,78 +183,94 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
  renderMes(t.dataset.f);});
 
 function calc(){
- const ev=+$('s1').value, part=+$('s2').value, pat=+$('s3').value, cot=+$('s4').value, nb=+$('s5').value;
- const ir=12;
+ const ev=+$('s1').value, part=+$('s2').value, pat=+$('s3').value, cot=+$('s4').value;
+ const nb=profil.eff, ir=12;
  $('v1').textContent=ev+' %'; $('v2').textContent=part.toLocaleString('fr-FR')+' %';
  $('v3').textContent=pat+' %'; $('v4').textContent=cot+' % + '+ir+' %';
  $('v5').textContent=eur(nb);
- const t=catTotals();
- $('catcalc').innerHTML=`Sélection : <b>${eur(t.eff)} agents</b> · part de la dépense publique réellement
-  consacrée à leurs salaires : <b>${t.part.toLocaleString('fr-FR',{maximumFractionDigits:1})} %</b>
-  ${$('unlock').checked?' <i>(remplacée par ton curseur)</i>':' — reportée automatiquement sur le réglage verrouillé ci-dessus.'}`;
- const a0=cur.md*1e9;
- const a1=a0*(1-ev/100);
- const a2=a1*part/100;
- const perYearCout=a2/nb;
- const brut=perYearCout/(1+pat/100);
- const net=brut*(1-cot/100)*(1-ir/100);
- const mois=net/12;
- const rows=[
+ const a0=cur.md*1e9, a1=a0*(1-ev/100), a2=a1*part/100;
+ const parTete=a2/nb;
+ let rows=[
   ['Annoncé','ce que dit la mesure',a0,''],
   [`− ${ev} % qui s'évaporent`,'réponses comportementales, optimisation, non-recouvrement',-(a0-a1),'neg'],
   ['= réellement encaissé','',a1,''],
-  [`× ${part} % qui arrivent aux salaires visés`,'clé de répartition du budget',-(a1-a2),'neg'],
-  ['= enveloppe pour ces salaires','',a2,''],
+  [`× ${part} % qui arrivent à ce poste de dépense`,'clé de répartition du budget public',-(a1-a2),'neg'],
+  ['= enveloppe pour ce poste','',a2,''],
  ];
- let html=rows.map(r=>`<div class="fl ${r[3]}"><span class="lb">${r[0]}${r[2+0]?'':''}<small>${r[1]}</small></span>
-  <span class="vv">${r[3]==='neg'?'':''}${eur(r[2]/1e6)} M€</span></div>`).join('');
- html+=`<div class="fl"><span class="lb">÷ ${eur(nb)} personnes<small>coût employeur annuel par personne</small></span>
-   <span class="vv">${eur(perYearCout)} €</span></div>`;
- html+=`<div class="fl neg"><span class="lb">− ${pat} % de charges employeur<small>l'État se les paie à lui-même</small></span>
+ let html=rows.map(r=>`<div class="fl ${r[3]}"><span class="lb">${r[0]}<small>${r[1]}</small></span>
+  <span class="vv">${eur(r[2]/1e6)} M€</span></div>`).join('');
+ html+=`<div class="fl"><span class="lb">÷ ${eur(nb)} ${profil.id==='tou'?'habitants':'bénéficiaires'}<small>${profil.low}</small></span>
+   <span class="vv">${eur(parTete)} € / an</span></div>`;
+
+ let net=parTete, label='€ / an';
+ if(profil.type==='salaire'){
+  const brut=parTete/(1+pat/100);
+  html+=`<div class="fl neg"><span class="lb">− ${pat} % de charges employeur<small>l'État se les paie à lui-même</small></span>
    <span class="vv">${eur(brut)} € brut</span></div>`;
- html+=`<div class="fl neg"><span class="lb">− ${cot} % de cotisations, − ${ir} % d'IR<small>ce qui arrive vraiment sur le compte</small></span>
+  net=brut*(1-cot/100)*(1-ir/100);
+  html+=`<div class="fl neg"><span class="lb">− ${cot} % de cotisations, − ${ir} % d'IR<small>ce qui arrive vraiment sur le compte</small></span>
    <span class="vv">${eur(net)} € net / an</span></div>`;
- html+=`<div class="fl tot"><span class="lb"><b>Sur la fiche de paie</b><small>net mensuel supplémentaire</small></span>
-   <span class="vv">${mois.toLocaleString('fr-FR',{maximumFractionDigits:0})} € / mois</span></div>`;
+ } else if(profil.type==='pension'){
+  net=parTete*(1-0.091)*(1-0.06);
+  html+=`<div class="fl neg"><span class="lb">− 9,1 % de CSG-CRDS, − 6 % d'IR<small>pas de charges employeur sur une pension</small></span>
+   <span class="vv">${eur(net)} € net / an</span></div>`;
+ } else if(profil.type==='presta'){
+  html+=`<div class="fl"><span class="lb">aucun prélèvement<small>le RSA est versé net et n'est pas imposable</small></span>
+   <span class="vv">${eur(net)} € net / an</span></div>`;
+ } else {
+  html+=`<div class="fl"><span class="lb">aucun prélèvement<small>vue brute, avant tout circuit de redistribution</small></span>
+   <span class="vv">${eur(net)} € / an</span></div>`;
+ }
+ const mois=net/12;
+ html+=`<div class="fl tot"><span class="lb"><b>${profil.n}</b><small>gain net mensuel</small></span>
+   <span class="vv">${mois.toLocaleString('fr-FR',{maximumFractionDigits:mois<10?2:0})} € / mois</span></div>`;
  $('flow').innerHTML=html;
- $('punch').textContent=mois<1?'moins d\'1 €':'+ '+mois.toLocaleString('fr-FR',{maximumFractionDigits:0})+' €';
- const need=12e9*(nb/2070000);
- $('cmp').innerHTML=`<b>Le point de comparaison :</b> revaloriser de <b>+10 %</b> ces ${eur(nb)} personnes coûte environ
-  <b>${(need/1e9).toLocaleString('fr-FR',{maximumFractionDigits:1})} Md€ par an</b> — soit
-  <b>${(need/1672e9*100).toLocaleString('fr-FR',{maximumFractionDigits:1})} %</b> du budget public total (1 672 Md€).
-  La question n'est donc pas seulement « combien on lève », mais « combien on réalloue ».`;
- window._m={mois,a0,a1,a2,ev,part,nb};
+ $('punch').textContent = mois<0.01 ? 'moins d\'un centime'
+   : '+ '+mois.toLocaleString('fr-FR',{maximumFractionDigits:mois<10?2:0})+' €';
+ $('punchl').textContent = profil.id==='tou' ? 'par mois, par habitant' : 'net, par mois, pour '+profil.low;
+ $('catcalc').innerHTML=`Profil retenu : <b>${eur(profil.eff)} ${profil.id==='tou'?'habitants':'bénéficiaires'}</b> ·
+  part de la dépense publique qui leur revient en revenu direct :
+  <b>${(profil.bud*profil.sal).toLocaleString('fr-FR',{maximumFractionDigits:1})} %</b>
+  ${$('unlock').checked?' <i>(remplacée par ton curseur)</i>':' — reportée automatiquement sur le réglage verrouillé ci-dessus.'}`;
+ const besoin = profil.type==='salaire' ? a2/ (profil.bud*profil.sal/100) : null;
+ $('cmp').innerHTML = profil.id==='tou'
+  ? `<b>Le point de comparaison :</b> la dépense publique française atteint <b>1 672 Md€ par an</b>, soit environ
+     <b>${eur(1672e9/68.4e6)} €</b> par habitant. Cette mesure en représente
+     <b>${(cur.md*1e9/1672e9*100).toLocaleString('fr-FR',{maximumFractionDigits:2})} %</b>.`
+  : `<b>Le point de comparaison :</b> revaloriser de <b>+10 %</b> l'ensemble des enseignants et des soignants
+     coûte environ <b>12 Md€ par an</b> — soit <b>0,7 %</b> du budget public total (1 672 Md€).
+     La question n'est donc pas seulement « combien on lève », mais « combien on réalloue ».`;
+ window._m={mois,a0,a1,a2,ev,part,nb,profil:profil.low};
 }
 ['s1','s2','s3','s4'].forEach(id=>$(id).oninput=calc);
-$('s5').oninput=()=>{autoEff=false;calc()};
 $('unlock').onchange=e=>{
  const on=e.target.checked;
  ['s2','s3','s4'].forEach(id=>$(id).disabled=!on);
  ['lk1','lk2','lk3'].forEach(id=>$(id).classList.toggle('locked',!on));
- if(!on){autoEff=true;$('s3').value=85;$('s4').value=22;syncCats();}
+ if(!on){$('s3').value=85;$('s4').value=22;syncCats();}
  calc();};
 ['s2','s3','s4'].forEach(id=>$(id).disabled=true);
 $('share').onclick=async()=>{
  const m=window._m;
  const res=await RF.shareCard((ctx,W,H)=>{
-  RF.cardBase(ctx,W,H,'CADRAN N°09 — LA CHAÎNE');
+  RF.cardBase(ctx,W,H,'LA CHAÎNE DES MILLIARDS');
   ctx.fillStyle='#1B160F';ctx.font='900 46px system-ui';
   ctx.fillText(cur.n.toUpperCase(),70,250);
   ctx.font='34px system-ui';ctx.fillText(`${md(cur.md)} milliards annoncés`,70,305);
   const steps=[[`− ${m.ev} % qui s'évaporent`,`${md(m.a1/1e9)} Md€ encaissés`],
    [`× ${m.part} % vers les salaires visés`,`${eur(m.a2/1e6)} M€`],
-   [`÷ ${eur(m.nb)} personnes, net de charges`,`—`]];
+   [`÷ ${eur(m.nb)} bénéficiaires, net de prélèvements`,`—`]];
   let y=400;
   steps.forEach(s=>{ctx.font='700 30px system-ui';ctx.fillStyle='#1B160F';ctx.fillText(s[0],70,y);
    ctx.font='30px ui-monospace, monospace';ctx.fillStyle='#D92D20';
    ctx.textAlign='right';ctx.fillText(s[1],1010,y);ctx.textAlign='left';y+=62;});
   ctx.fillStyle='#FF4D00';ctx.fillRect(70,y+30,940,240);
   ctx.fillStyle='#fff';ctx.font='900 110px system-ui';ctx.textAlign='center';
-  ctx.fillText('+ '+m.mois.toLocaleString('fr-FR',{maximumFractionDigits:0})+' € / mois',540,y+160);
-  ctx.font='28px ui-monospace, monospace';ctx.fillText('net, par personne',540,y+215);
+  ctx.fillText('+ '+m.mois.toLocaleString('fr-FR',{maximumFractionDigits:m.mois<10?2:0})+' € / mois',540,y+160);
+  ctx.font='28px ui-monospace, monospace';ctx.fillText('pour '+m.profil+', par mois',540,y+215);
   ctx.textAlign='left';ctx.font='900 30px system-ui';ctx.fillStyle='#1B160F';
   ctx.fillText('Bouge les curseurs toi-même →',70,H-115);
- },'chaine-rf.png',`« ${cur.n} » : ${md(cur.md)} Md€ annoncés → ${m.mois.toLocaleString('fr-FR',{maximumFractionDigits:0})} € net/mois par personne. Refais le calcul avec tes hypothèses : ${location.origin+location.pathname}`);
+ },'chaine-rf.png',`« ${cur.n} » : ${md(cur.md)} Md€ annoncés → ${m.mois.toLocaleString('fr-FR',{maximumFractionDigits:m.mois<10?2:0})} € net/mois pour ${m.profil}. Refais le calcul avec tes hypothèses : ${location.origin+location.pathname}`);
  $('share').textContent=res==='shared'?'📮 Partagé !':'📮 Image téléchargée (PNG)';
 };
 renderMes('all');renderCats();syncCats();calc();

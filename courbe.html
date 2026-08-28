@@ -1,8 +1,8 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cadran 02 — Dessine la courbe · Au pifomètre</title>
-<link rel="icon" href="favicon.svg?v=1787878178">
-<link rel="stylesheet" href="styles.css?v=1787878178">
+<title>Dessine la courbe · Au pifomètre</title>
+<link rel="icon" href="favicon.svg?v=1787878867">
+<link rel="stylesheet" href="styles.css?v=1787878867">
 <style>
 .qbig{font-weight:900;font-size:22px;line-height:1.2;margin:4px 0 6px}
 .qsub{font-family:var(--mono);font-size:12px;line-height:1.6;opacity:.8;margin-bottom:12px}
@@ -33,7 +33,7 @@ svg{width:100%;height:auto;display:block}
 </style></head><body><div class="wrap">
 
 <div class="bureau"><b><a href="index.html">AU PIFOMÈTRE</a></b>
-<div class="form-no">CADRAN N°02 — LE TRACÉ<br>aiguille calibrée sur 21 séries</div></div>
+<div class="form-no">LE TRACÉ<br>aiguille calibrée sur 21 séries</div></div>
 
 <h1>Tu crois savoir<br>comment ça a évolué.<br><span class="o">Dessine-le.</span></h1>
 <div class="sub">Le début de la courbe t'est donné. À toi de tracer la suite, au doigt ou à la souris. La vraie courbe vient se poser sur la tienne — l'écart entre les deux, c'est ton pifomètre.</div>
@@ -65,7 +65,7 @@ Retraites : Eurostat (spr_exp_pens) · Fécondité, industrie manufacturière, s
 Nucléaire, éolien, solaire : Ember / IRENA via Our World in Data · Dette, pauvreté, revenu médian : Eurostat · Part des salaires : OIT · <b>21 courbes</b>, séries relevées le 28/08/2026 ·
 <a href="index.html">← tous les cadrans</a></footer>
 
-<script src="curves.js?v=1787878178"></script><script src="rf-data.js?v=1787878225"></script>
+<script src="curves.js?v=1787878867"></script><script src="rf-data.js?v=1787878867"></script>
 <script>
 const $=id=>document.getElementById(id);
 const KEYS=Object.keys(RF_CURVES);
@@ -188,7 +188,7 @@ $('go').onclick=()=>{
 $('share').onclick=async()=>{
  const sc=$('score').textContent;
  const res=await RF.shareCard((ctx,CW,CH)=>{
-  RF.cardBase(ctx,CW,CH,'CADRAN N°02 — MON TRACÉ');
+  RF.cardBase(ctx,CW,CH,'MON TRACÉ');
   ctx.fillStyle='#1B160F';ctx.font='900 40px system-ui';
   let y=210; const words=C.q.split(' '); let line='';
   for(const w of words){ const t=line+w+' ';

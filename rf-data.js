@@ -125,11 +125,11 @@ window.RF = (function () {
 
   /* ---------- barre de navigation partagée ---------- */
   const CADRANS = [
-    { f:'index.html',      n:'',   t:'Accueil',                 em:'◔'  },
-    { f:'pari.html',       n:'04', t:'Le pari',     em:'🎲' },
-    { f:'classement.html', n:'07', t:'Le classement',           em:'🏆' },
-    { f:'courbe.html',     n:'02', t:'Dessine la courbe',       em:'✏️' },
-    { f:'milliards.html',  n:'09', t:'La chaîne des milliards', em:'🧾' },
+    { f:'index.html', t:'Accueil', em:'◔' },
+    { f:'pari.html', t:'Le pari', em:'🎲' },
+    { f:'classement.html', t:'Le classement', em:'🏆' },
+    { f:'courbe.html', t:'Dessine la courbe', em:'✏️' },
+    { f:'milliards.html', t:'La chaîne des milliards', em:'🧾' },
   ];
   function mountNav(current) {
     const here = CADRANS.find(g => g.f === current) || CADRANS[0];
@@ -146,7 +146,7 @@ window.RF = (function () {
     drawer.innerHTML = '<div class="dr-head">Les cadrans</div>' +
       CADRANS.map(g => `<a class="dr-item${g.f === current ? ' on' : ''}" href="${g.f}">
         <span class="dr-em">${g.em}</span>
-        <span class="dr-t">${g.t}${g.n ? `<small>cadran n°${g.n}</small>` : ''}</span></a>`).join('');
+        <span class="dr-t">${g.t}</span></a>`).join('');
     const scrim = document.createElement('div');
     scrim.className = 'scrim';
     document.body.insertBefore(bar, document.body.firstChild);

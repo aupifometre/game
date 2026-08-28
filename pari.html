@@ -1,8 +1,8 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cadran 04 — Le pari · Au pifomètre</title>
-<link rel="icon" href="favicon.svg?v=1787878178">
-<link rel="stylesheet" href="styles.css?v=1787878178">
+<title>Le pari · Au pifomètre</title>
+<link rel="icon" href="favicon.svg?v=1787878867">
+<link rel="stylesheet" href="styles.css?v=1787878867">
 <style>
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:8px}
 .kpi{border:2px solid var(--ink);border-radius:8px;padding:11px;cursor:pointer;background:#fff;
@@ -82,7 +82,7 @@ svg{width:100%;height:auto;display:block}
 <div id="rf-load"><div class="box"><b>Calibrage de l'aiguille…</b><ul id="loadlist"></ul></div></div>
 
 <div class="bureau"><b><a href="index.html">AU PIFOMÈTRE</a></b>
-<div class="form-no">CADRAN N°04 — LE PARI<br>aiguille calibrée sur 227 pays</div></div>
+<div class="form-no">LE PARI<br>aiguille calibrée sur 227 pays</div></div>
 
 <h1>Ton pif<br>contre 227 pays.<br><span class="o">Parie.</span></h1>
 <div class="sub">Aucun chiffre de ce site n'est écrit à la main : tout descend des API publiques au moment où tu ouvres la page.</div>
@@ -123,7 +123,7 @@ PNUD (inégalité de genre, années d'école) · OMS (espérance de vie en bonne
 Gallup / World Happiness Report · World Inequality Database (part des 1 %) ·
 n varie de 139 à 227 pays selon le croisement · site statique, rien n'est stocké côté serveur ·
 </footer>
-<script src="snapshot.js?v=1787878178"></script><script src="rf-data.js?v=1787878225"></script>
+<script src="snapshot.js?v=1787878867"></script><script src="rf-data.js?v=1787878867"></script>
 <script>
 let DATA=null, kpi=null, bet=null, axis=null, lastR=null, lastWin=null, lastN=0, lastPts=[];
 const $=id=>document.getElementById(id);
@@ -405,7 +405,7 @@ $('share').onclick=async()=>{
  const pct=Math.round(r*r*100);
  const good=BETS.find(x=>x.test(r));
  const res=await RF.shareCard((ctx,W,H)=>{
-  RF.cardBase(ctx,W,H,'CADRAN N°04 — MON PRONOSTIC');
+  RF.cardBase(ctx,W,H,'MON PRONOSTIC');
   ctx.fillStyle='#1B160F';ctx.font='900 40px system-ui';
   let y=225,line='';
   for(const w of `Dans les pays ${a.high}, ${k.short} est-elle meilleure ?`.split(' ')){
